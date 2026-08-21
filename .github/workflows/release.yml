@@ -131,7 +131,7 @@ jobs:
   build_packs:
     name: Build ${{ matrix.filename }}
     needs: setup
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
