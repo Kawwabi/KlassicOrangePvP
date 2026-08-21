@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_double_slab",
+  "textures": {
+    "end": "minecraft:block/smooth_stone",
+    "half_top": "minecraft:block/smooth_stone_slab_side_top",
+    "half_bottom": "minecraft:block/smooth_stone_slab_side",
+    "particle": "block/smooth_stone"
+  }
+}

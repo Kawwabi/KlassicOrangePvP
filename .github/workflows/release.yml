@@ -1,0 +1,606 @@
+name: Ultimate Universal Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      all:
+        description: 'Build ALL versions'
+        required: false
+        default: false
+        type: boolean
+      v_1_8:
+        description: '1.6.1-1.8.9'
+        required: false
+        default: false
+        type: boolean
+      v_1_9:
+        description: '1.9-1.10.2'
+        required: false
+        default: false
+        type: boolean
+      v_1_11:
+        description: '1.11-1.12.2'
+        required: false
+        default: false
+        type: boolean
+      v_1_13:
+        description: '1.13-1.14.4'
+        required: false
+        default: false
+        type: boolean
+      v_1_15:
+        description: '1.15-1.16.1'
+        required: false
+        default: false
+        type: boolean
+      v_1_16:
+        description: '1.16.2-1.16.5'
+        required: false
+        default: false
+        type: boolean
+      v_1_17:
+        description: '1.17-1.17.1'
+        required: false
+        default: false
+        type: boolean
+      v_1_18:
+        description: '1.18-1.18.2'
+        required: false
+        default: false
+        type: boolean
+      v_1_19:
+        description: '1.19-1.19.2'
+        required: false
+        default: false
+        type: boolean
+      v_1_19_3:
+        description: '1.19.3'
+        required: false
+        default: false
+        type: boolean
+      v_1_19_4:
+        description: '1.19.4'
+        required: false
+        default: false
+        type: boolean
+      v_1_20:
+        description: '1.20-1.20.1'
+        required: false
+        default: false
+        type: boolean
+      v_1_20_2:
+        description: '1.20.2-26.x'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  setup:
+    name: Prepare Build Matrix
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: bash
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Calculate Target Matrix
+        id: set-matrix
+        env:
+          INPUTS_JSON: ${{ toJson(inputs) }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          ALL_VERSIONS='[
+            {"key": "v_1_8", "filename": "1.6.1-1.8.9", "mc_ver": "1.8", "format": 1, "is_base": true},
+            {"key": "v_1_9", "filename": "1.9-1.10.2", "mc_ver": "1.9", "format": 2},
+            {"key": "v_1_11", "filename": "1.11-1.12.2", "mc_ver": "1.11", "format": 3},
+            {"key": "v_1_13", "filename": "1.13-1.14.4", "mc_ver": "1.13", "format": 4},
+            {"key": "v_1_15", "filename": "1.15-1.16.1", "mc_ver": "1.15", "format": 5},
+            {"key": "v_1_16", "filename": "1.16.2-1.16.5", "mc_ver": "1.16.2", "format": 6},
+            {"key": "v_1_17", "filename": "1.17-1.17.1", "mc_ver": "1.17", "format": 7},
+            {"key": "v_1_18", "filename": "1.18-1.18.2", "mc_ver": "1.18", "format": 8},
+            {"key": "v_1_19", "filename": "1.19-1.19.2", "mc_ver": "1.19", "format": 9},
+            {"key": "v_1_19_3", "filename": "1.19.3", "mc_ver": "1.19.3", "format": 12},
+            {"key": "v_1_19_4", "filename": "1.19.4", "mc_ver": "1.19.4", "format": 13},
+            {"key": "v_1_20", "filename": "1.20-1.20.1", "mc_ver": "1.20", "format": 15},
+            {"key": "v_1_20_2", "filename": "1.20.2-26.x", "mc_ver": "1.21.4", "format": 88, "is_modern": true}
+          ]'
+
+          if [ "$EVENT_NAME" = "release" ] || [ "$(echo "$INPUTS_JSON" | jq -r '.all // false')" = "true" ]; then
+            COMPACT=$(echo "$ALL_VERSIONS" | jq -c '{include: .}')
+          else
+            COMPACT=$(echo "$ALL_VERSIONS" | jq -c --argjson inputs "$INPUTS_JSON" '{
+              include: [.[] | select($inputs[.key] == true)]
+            }')
+          fi
+
+          SELECTED_COUNT=$(echo "$COMPACT" | jq '.include | length')
+          if [ "$SELECTED_COUNT" -eq 0 ]; then
+            echo "::error::No versions were selected for building."
+            exit 1
+          fi
+
+          echo "matrix=$COMPACT" >> "$GITHUB_OUTPUT"
+
+  build_packs:
+    name: Build ${{ matrix.filename }}
+    needs: setup
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix: ${{ fromJSON(needs.setup.outputs.matrix) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java (For Converter)
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Download ResourcePackConverter
+        run: wget -q -O converter.jar https://github.com/agentdid127/ResourcePackConverter/releases/download/2.2.6/ResourcePackConverter.jar
+
+      - name: Prepare Base Version (1.8.9)
+        if: matrix.is_base
+        run: |
+          mkdir -p build_dir
+          cp -r src/* build_dir/
+
+      - name: Convert to Newer Versions
+        if: '!matrix.is_base'
+        run: |
+          mkdir -p build_dir
+          cp -r src ToConvert
+          java -Xms2G -Xmx8G -jar converter.jar --from 1.8 --to ${{ matrix.mc_ver }} --input ToConvert
+          CONVERTED_DIR=$(find . -maxdepth 1 -type d -name "ToConvert_*" | head -n 1)
+          if [ -n "$CONVERTED_DIR" ]; then
+            cp -r "$CONVERTED_DIR"/* build_dir/
+          else
+            cp -r ToConvert/* build_dir/
+          fi
+          rm -rf ToConvert ToConvert_* converter.jar
+
+          # --- 1. APPLY OVERRIDES FIRST ---
+          if [ -d "modern_override" ]; then
+            cp -r modern_override/* build_dir/
+          fi
+
+          # --- 1a. CREATIVE TABS OVERRIDE (Format 12+) ---
+          CREATIVE_GUI="build_dir/assets/minecraft/textures/gui/container/creative_inventory"
+          if [ "${{ matrix.format }}" -ge 12 ]; then
+            if [ -f "$CREATIVE_GUI/tabsfor1.19.3+.png" ]; then
+              mv -f "$CREATIVE_GUI/tabsfor1.19.3+.png" "$CREATIVE_GUI/tabs.png"
+            fi
+          else
+            rm -f "$CREATIVE_GUI/tabsfor1.19.3+.png" 2>/dev/null || true
+          fi
+
+          # --- 1b. SPAWN EGGS FOR 1.9 TO 1.12.2 (Formats 2 & 3) ---
+          if [ "${{ matrix.format }}" -ge 2 ] && [ "${{ matrix.format }}" -lt 4 ]; then
+            if [ -d "modern_override/assets/minecraft/optifine/cit/spawn_egg" ]; then
+              mkdir -p build_dir/assets/minecraft/mcpatcher/cit/spawn_egg
+              cp -r modern_override/assets/minecraft/optifine/cit/spawn_egg/* build_dir/assets/minecraft/mcpatcher/cit/spawn_egg/ 2>/dev/null || true
+              rm -rf build_dir/assets/minecraft/optifine/cit/spawn_egg/ 2>/dev/null || true
+            fi
+          fi
+
+          # --- 1c. BED MODELS (Format 2 Only) ---
+          if [ "${{ matrix.format }}" -eq 2 ]; then
+            mkdir -p build_dir/assets/minecraft/models/item build_dir/assets/minecraft/models/block
+            find build_dir/assets/minecraft/models/item/ -type f -name "*bed*.json" -delete 2>/dev/null || true
+            find build_dir/assets/minecraft/models/block/ -type f -name "*bed*.json" -delete 2>/dev/null || true
+            if [ -f "modern_override/assets/minecraft/models/item/bed.json" ]; then
+              cp modern_override/assets/minecraft/models/item/bed.json build_dir/assets/minecraft/models/item/ 2>/dev/null || true
+            fi
+            if [ -d "modern_override/assets/minecraft/models/block" ]; then
+              cp -r modern_override/assets/minecraft/models/block/*bed*.json build_dir/assets/minecraft/models/block/ 2>/dev/null || true
+            fi
+          fi
+
+          # --- 1d. CLEANUP BED MODELS (Format 3+) ---
+          if [ "${{ matrix.format }}" -ge 3 ]; then
+            find build_dir/assets/minecraft/models/item/ -type f -name "*bed*.json" -delete 2>/dev/null || true
+            find build_dir/assets/minecraft/models/block/ -type f -name "*bed*.json" -delete 2>/dev/null || true
+            find build_dir/assets/minecraft/blockstates/ -type f -name "*bed*.json" -delete 2>/dev/null || true
+          fi
+
+          # --- 1e. LOCALE FILES FOR 1.9 - 1.12.2 (Formats 2 & 3) ---
+          if [ "${{ matrix.format }}" -eq 3 ]; then
+            mkdir -p build_dir/assets/minecraft/lang
+            if [ -f "build_dir/assets/minecraft/lang/pt_BR.lang" ]; then
+              mv -f build_dir/assets/minecraft/lang/pt_BR.lang build_dir/assets/minecraft/lang/pt_br.lang
+            fi
+            rm -f build_dir/assets/minecraft/lang/*.json 2>/dev/null || true
+          elif [ "${{ matrix.format }}" -eq 2 ]; then
+            rm -f build_dir/assets/minecraft/lang/*.json 2>/dev/null || true
+          fi
+
+          # --- 1f. LOCALE FILES FOR 1.13+ (Format 4+) ---
+          if [ "${{ matrix.format }}" -ge 4 ]; then
+            mkdir -p build_dir/assets/minecraft/lang
+            if [ -f "build_dir/assets/minecraft/lang/pt_BR.json" ]; then
+              mv -f build_dir/assets/minecraft/lang/pt_BR.json build_dir/assets/minecraft/lang/pt_br.json
+            fi
+            rm -f build_dir/assets/minecraft/lang/*.lang 2>/dev/null || true
+          fi
+
+          # --- 1g. MOJANG SPLASH SCREEN (Format 6+) ---
+          TITLE_GUI="build_dir/assets/minecraft/textures/gui/title"
+          if [ "${{ matrix.format }}" -ge 6 ]; then
+            rm -f "$TITLE_GUI/mojang.png" 2>/dev/null || true
+          else
+            rm -f "$TITLE_GUI/mojangstudios.png" 2>/dev/null || true
+          fi
+
+          # --- 1h. MODERN GUI SPRITES (Format 18+) ---
+          if [ "${{ matrix.format }}" -ge 18 ]; then
+            if [ -d "modern_override/assets/minecraft/textures/gui/sprites" ]; then
+              mkdir -p build_dir/assets/minecraft/textures/gui/sprites
+              cp -rf modern_override/assets/minecraft/textures/gui/sprites/. build_dir/assets/minecraft/textures/gui/sprites/ 2>/dev/null || true
+            fi
+          else
+            rm -rf build_dir/assets/minecraft/textures/gui/sprites 2>/dev/null || true
+          fi
+
+          # --- 2. REMOVE CONVERTER INTERFERENCE ---
+          find build_dir/assets/minecraft/blockstates/ -type f \( -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
+          find build_dir/assets/minecraft/models/block/ -type f \( -name "*banner*.json" -o -name "*command_block*.json" -o -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
+          find build_dir/assets/minecraft/models/item/ -type f \( -name "*banner*.json" -o -name "*command_block*.json" -o -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
+          find build_dir/assets/minecraft/textures/entity/ -name "*banner*.png" -type f -delete 2>/dev/null || true
+          rm -rf build_dir/assets/minecraft/textures/entity/banner/ 2>/dev/null || true
+
+          # --- 3. MODERN ERA FIXES (1.13+) ---
+          if [ "${{ matrix.format }}" -ge 4 ]; then
+            if [ -d "build_dir/assets/minecraft/mcpatcher" ]; then
+              mkdir -p build_dir/assets/minecraft/optifine
+              cp -rn build_dir/assets/minecraft/mcpatcher/. build_dir/assets/minecraft/optifine/ 2>/dev/null || true
+              rm -rf build_dir/assets/minecraft/mcpatcher
+            fi
+
+            if [ -d "build_dir/assets/minecraft/optifine/sky" ]; then
+              find build_dir/assets/minecraft/optifine/sky/ -type f -name "*.properties" -exec sed -i 's/mcpatcher\/sky/optifine\/sky/g' {} + 2>/dev/null || true
+            fi
+
+            find build_dir/assets/minecraft/models/item/ -type f -name "*bed*.json" -delete 2>/dev/null || true
+            find build_dir/assets/minecraft/models/block/ -type f -name "*bed*.json" -delete 2>/dev/null || true
+            find build_dir/assets/minecraft/blockstates/ -type f -name "*bed*.json" -delete 2>/dev/null || true
+
+            if [ -d "build_dir/assets/minecraft/textures/items" ]; then
+              mkdir -p build_dir/assets/minecraft/textures/item
+              cp -rn build_dir/assets/minecraft/textures/items/. build_dir/assets/minecraft/textures/item/ 2>/dev/null || true
+              rm -rf build_dir/assets/minecraft/textures/items
+            fi
+
+            if [ -d "build_dir/assets/minecraft/textures/blocks" ]; then
+              mkdir -p build_dir/assets/minecraft/textures/block
+              cp -rn build_dir/assets/minecraft/textures/blocks/. build_dir/assets/minecraft/textures/block/ 2>/dev/null || true
+              rm -rf build_dir/assets/minecraft/textures/blocks
+            fi
+
+            find build_dir/assets/minecraft/models/ -type f -name "*.json" -exec sed -i 's/items\//item\//g; s/blocks\//block\//g' {} + 2>/dev/null || true
+            find build_dir/assets/minecraft/optifine/ -type f -name "*.properties" -exec sed -i 's/items\//item\//g; s/blocks\//block\//g' {} + 2>/dev/null || true
+          fi
+
+      - name: Prune Version-Specific Incompatible Assets
+        run: |
+          python3 - << 'EOF'
+          import os
+          import glob
+          import shutil
+
+          fmt = int("${{ matrix.format }}")
+          base_dir = "build_dir/assets/minecraft"
+
+          def purge_glob(pattern):
+              for path in glob.glob(os.path.join(base_dir, pattern), recursive=True):
+                  if os.path.isfile(path) or os.path.islink(path):
+                      os.remove(path)
+                      mcmeta = path + ".mcmeta"
+                      if os.path.exists(mcmeta):
+                          os.remove(mcmeta)
+                  elif os.path.isdir(path):
+                      shutil.rmtree(path, ignore_errors=True)
+
+          # --- SPAWN EGGS (Format <= 3 vs Format >= 4) ---
+          if fmt <= 3:
+              purge_glob("models/item/*spawn_egg*.json")
+              purge_glob("models/block/*spawn_egg*.json")
+          else:
+              purge_glob("**/cit/spawn_egg*")
+              find_color_props = glob.glob(os.path.join(base_dir, "**/color.properties"), recursive=True)
+              for cp in find_color_props:
+                  try:
+                      with open(cp, "r") as f:
+                          lines = [l for l in f if not l.strip().startswith("egg.")]
+                      with open(cp, "w") as f:
+                          f.writelines(lines)
+                  except Exception:
+                      pass
+
+          # --- 1.21.9+ (Format < 88) ---
+          if fmt < 88:
+              purge_glob("**/ctm/**/crafter*")
+              purge_glob("**/ctm/**/polished_tuff*")
+              purge_glob("**/ctm/**/copper/grate*")
+              purge_glob("**/ctm/**/copper/chiseled*")
+              purge_glob("textures/**/gui/**/crafter*")
+              # Copper equipment & tools
+              purge_glob("textures/**/copper_axe*")
+              purge_glob("textures/**/copper_hoe*")
+              purge_glob("textures/**/copper_pickaxe*")
+              purge_glob("textures/**/copper_shovel*")
+              purge_glob("textures/**/copper_sword*")
+              purge_glob("textures/**/copper_helmet*")
+              purge_glob("textures/**/copper_chestplate*")
+              purge_glob("textures/**/copper_leggings*")
+              purge_glob("textures/**/copper_boots*")
+              purge_glob("textures/**/mace*")
+
+          # --- 1.19+ (Format < 9) ---
+          if fmt < 9:
+              purge_glob("**/ctm/**/froglights*")
+              purge_glob("**/ctm/**/reinforced_deepslate*")
+
+          # --- 1.17+ (Format < 7) ---
+          if fmt < 7:
+              purge_glob("**/ctm/**/chiseled_deepslate*")
+              purge_glob("**/ctm/**/deepslate*")
+              purge_glob("**/ctm/**/polished_deepslate*")
+              purge_glob("**/ctm/**/copper*")
+              purge_glob("**/ctm/**/glass/tinted_glass*")
+              purge_glob("**/ctm/**/metals_and_gems/ore/copper_ore*")
+              purge_glob("**/ctm/**/metals_and_gems/ore/deepslate_*")
+
+          # --- 1.15 - 1.16+ (Format < 5) ---
+          if fmt < 5:
+              purge_glob("**/ctm/**/beehive*")
+              purge_glob("**/ctm/**/beenest*")
+              purge_glob("**/ctm/**/chiseled_nether_bricks*")
+              purge_glob("**/ctm/**/chiseled_polished_blackstone*")
+              purge_glob("**/ctm/**/netherite_block*")
+              purge_glob("**/ctm/**/polished_basalt*")
+              purge_glob("**/ctm/**/polished_blackstone*")
+              purge_glob("**/ctm/**/quartz_bricks*")
+              purge_glob("**/ctm/**/shroomlight*")
+              purge_glob("**/ctm/**/metals_and_gems/ore/nether_gold_ore*")
+              purge_glob("textures/**/items/honeycomb*")
+              purge_glob("textures/**/item/honeycomb*")
+              purge_glob("textures/**/items/honey_bottle*")
+              purge_glob("textures/**/item/honey_bottle*")
+              purge_glob("textures/**/gui/**/blast_furnace*")
+              purge_glob("textures/**/gui/**/smoker*")
+              purge_glob("textures/**/gui/**/smithing*")
+
+          # --- 1.13 - 1.14+ (Format < 4) ---
+          if fmt < 4:
+              purge_glob("**/ctm/**/cartography_table*")
+              purge_glob("**/ctm/**/loom*")
+              purge_glob("textures/**/blocks/blue_ice.png")
+              purge_glob("textures/**/blocks/cornflower.png")
+              purge_glob("textures/**/blocks/kelp*.png")
+              purge_glob("textures/**/blocks/lectern_*.png")
+              purge_glob("textures/**/blocks/cut_*_sandstone.png")
+              purge_glob("textures/**/crossbow*")
+              purge_glob("textures/**/gui/**/cartography_table*")
+              purge_glob("textures/**/gui/**/grindstone*")
+              purge_glob("textures/**/gui/**/loom*")
+              purge_glob("textures/**/gui/**/stonecutter*")
+              purge_glob("textures/**/gui/**/nautilus*")
+              purge_glob("textures/**/gui/**/recipe_book*")
+              purge_glob("textures/**/gui/**/recipe_background*")
+              purge_glob("textures/**/gui/**/gamemode_switcher*")
+              purge_glob("textures/**/gui/**/advancements*")
+              # Custom wood signs (< 1.14)
+              purge_glob("textures/**/spruce_sign*")
+              purge_glob("textures/**/birch_sign*")
+              purge_glob("textures/**/jungle_sign*")
+              purge_glob("textures/**/acacia_sign*")
+              purge_glob("textures/**/dark_oak_sign*")
+              # Redundant modern dye identifiers (< 1.14)
+              purge_glob("textures/**/black_dye*")
+              purge_glob("textures/**/white_dye*")
+              purge_glob("textures/**/blue_dye*")
+              purge_glob("textures/**/brown_dye*")
+
+          # --- FLATTENING NAME DEDUPLICATION (1.13+ vs Legacy) ---
+          if fmt >= 4:
+              # 1.13+ uses bow.png and minecart.png
+              purge_glob("textures/item/bow_standby.png")
+              purge_glob("textures/item/minecart_normal.png")
+              purge_glob("textures/item/clock.png")
+              purge_glob("textures/item/clock.png.mcmeta")
+              purge_glob("textures/item/compass.png")
+              purge_glob("textures/item/compass.png.mcmeta")
+          else:
+              # 1.8–1.12.2 uses bow_standby.png and minecart_normal.png
+              purge_glob("textures/items/bow.png")
+              purge_glob("textures/items/minecart.png")
+              purge_glob("textures/items/clock_*.png")
+              purge_glob("textures/items/compass_*.png")
+
+          # --- 1.11 - 1.12+ (Format < 3) ---
+          if fmt < 3:
+              purge_glob("textures/**/gui/**/shulker_box*")
+
+          # --- 1.9 - 1.10+ (Format == 1 / 1.8.9 Base) ---
+          if fmt == 1:
+              purge_glob("**/ctm/**/bone*")
+              purge_glob("**/ctm/**/purpur*")
+              purge_glob("blockstates/purpur_pillar.json")
+              purge_glob("models/block/purpur_pillar*.json")
+              purge_glob("textures/**/blocks/magma.png")
+              purge_glob("textures/**/blocks/nether_wart_block.png")
+              purge_glob("textures/**/blocks/bone_block_*.png")
+              purge_glob("textures/**/blocks/beetroots_stage*.png")
+              purge_glob("textures/**/blocks/chorus_*.png")
+              purge_glob("textures/**/blocks/end_rod.png")
+              purge_glob("textures/**/blocks/frosted_ice_*.png")
+              purge_glob("textures/**/blocks/end_bricks.png")
+              purge_glob("textures/**/blocks/*_trapdoor.png")
+              purge_glob("textures/**/blocks/chain_command_block.png")
+              purge_glob("textures/**/blocks/repeating_command_block.png")
+              # Custom boat variants (< 1.9)
+              purge_glob("textures/**/*_boat.png")
+
+              # Modern individual colored bed textures
+              bed_colors = ["black", "blue", "brown", "cyan", "gray", "green", "light_blue", 
+                            "light_gray", "lime", "magenta", "orange", "pink", "purple", "white", "yellow"]
+              for color in bed_colors:
+                  purge_glob(f"textures/**/blocks/{color}_bed_*")
+
+              # Modern converted duplicates
+              redundant_modern_1_8 = [
+                  "items/beef.png", "items/cooked_beef.png", "items/chicken.png",
+                  "items/cooked_chicken.png", "items/porkchop.png", "items/cooked_porkchop.png",
+                  "items/rabbit.png", "items/cooked_rabbit.png", "items/mutton.png",
+                  "items/cooked_mutton.png", "items/cod.png", "items/cooked_cod.png",
+                  "items/salmon.png", "items/cooked_salmon.png", "items/tropical_fish.png",
+                  "items/pufferfish.png", "items/melon_slice.png", "items/glistering_melon_slice.png",
+                  "items/slime_ball.png", "items/fireworks.png", "items/firework_star*.png",
+                  "items/firework_rocket.png", "items/fireball.png", "items/music_disc_*.png",
+                  "items/nether_brick.png", "items/wooden_axe.png", "items/wooden_hoe.png",
+                  "items/wooden_pickaxe.png", "items/wooden_shovel.png", "items/wooden_sword.png",
+                  "items/golden_axe.png", "items/golden_boots.png", "items/golden_chestplate.png",
+                  "items/golden_helmet.png", "items/golden_hoe.png", "items/golden_horse_armor.png",
+                  "items/golden_leggings.png", "items/golden_pickaxe.png", "items/golden_shovel.png",
+                  "items/golden_sword.png", "items/golden_apple.png", "items/golden_carrot.png",
+                  "items/oak_door.png", "items/iron_door.png", "items/birch_door.png",
+                  "items/spruce_door.png", "items/jungle_door.png", "items/acacia_door.png",
+                  "items/dark_oak_door.png", "items/map.png", "items/filled_map*.png",
+                  "items/written_book.png", "items/writable_book.png",
+                  "blocks/carrots_stage[0-7].png",
+                  "blocks/cocoa_stage[0-7].png",
+                  "blocks/nether_wart_stage[0-7].png",
+                  "blocks/oak_planks.png", "blocks/birch_planks.png", "blocks/spruce_planks.png",
+                  "blocks/jungle_planks.png", "blocks/acacia_planks.png", "blocks/dark_oak_planks.png",
+                  "blocks/oak_log*.png", "blocks/birch_log*.png", "blocks/spruce_log*.png",
+                  "blocks/jungle_log*.png", "blocks/acacia_log*.png", "blocks/dark_oak_log*.png",
+                  "blocks/grass_block_*.png", "blocks/stone_bricks.png", "blocks/end_stone_bricks.png",
+                  "blocks/short_grass.png", "blocks/allium.png", "blocks/azure_bluet.png",
+                  "blocks/blue_orchid.png", "blocks/dandelion.png", "blocks/dead_bush.png",
+                  "blocks/fire_0.png", "blocks/fire_1.png", "blocks/furnace_front.png",
+                  "blocks/dispenser_front.png", "blocks/dropper_front.png", "blocks/attached_*_stem.png",
+                  "blocks/melon_stem.png", "blocks/pumpkin_stem.png", "blocks/nether_bricks.png",
+                  "blocks/nether_portal.png", "blocks/iron_door_*.png", "blocks/oak_door_*.png",
+                  "blocks/andesite.png", "blocks/diorite.png", "blocks/granite.png"
+              ]
+              for pat in redundant_modern_1_8:
+                  purge_glob("textures/" + pat)
+
+          # Clean up empty directories
+          for root, dirs, files in os.walk(base_dir, topdown=False):
+              for d in dirs:
+                  dir_path = os.path.join(root, d)
+                  if not os.listdir(dir_path):
+                      try:
+                          os.rmdir(dir_path)
+                      except OSError:
+                          pass
+
+          print(f"Asset pruning complete for Format {fmt}.")
+          EOF
+
+      - name: Inject Legacy mcmeta (Formats 1-15)
+        if: '!matrix.is_modern'
+        run: |
+          jq '.pack.pack_format = ${{ matrix.format }} | del(.pack.supported_formats) | del(.pack.min_format) | del(.pack.max_format)' build_dir/pack.mcmeta > tmp.json
+          mv tmp.json build_dir/pack.mcmeta
+
+      - name: Inject Modern mcmeta (Format 18+)
+        if: matrix.is_modern
+        run: |
+          jq '.pack.pack_format = ${{ matrix.format }} | .pack.supported_formats = [18, 999] | .pack.min_format = 18 | .pack.max_format = 999' build_dir/pack.mcmeta > tmp.json
+          mv tmp.json build_dir/pack.mcmeta
+
+      - name: Optimize with PackSquash
+        uses: ComunidadAylas/PackSquash-action@v4
+        with:
+          packsquash_version: v0.4.1
+          action_cache_revision: "local-${{ github.run_id }}-${{ matrix.filename }}"
+          options: |
+            # Global Options (These apply to the whole pack)
+
+            pack_directory = 'build_dir'
+            output_file_path = 'Klassic Orange PvP-${{ matrix.filename }}.zip'
+            allow_mods = ['OptiFine']
+            never_store_squash_times = true
+            spooling_buffers_size = 512
+            zip_compression_iterations = 255
+            zip_spec_conformance_level = 'disregard'
+            recompress_compressed_files = true
+
+            # Per-file Options (These apply ONLY to PNG files)
+
+            ['**/*.png']
+            image_data_compression_iterations = 255
+            downsize_if_single_color = true
+
+      - name: Attach Zips to GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: "Klassic Orange PvP-${{ matrix.filename }}.zip"
+          
+      - name: Stage Pack Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: part-${{ matrix.filename }}
+          path: "Klassic Orange PvP-${{ matrix.filename }}.zip"
+          retention-days: 1
+
+  bundle_artifacts:
+    name: Bundle All Packs
+    needs: build_packs
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Download all staged packs
+        uses: actions/download-artifact@v4
+        with:
+          pattern: part-*
+          merge-multiple: true
+          path: bundle_output
+
+      - name: Upload Single Grouped Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: Klassic-Orange-PvP-Packs
+          path: bundle_output/*.zip
+          retention-days: 1
+
+      - name: Cleanup temporary staging parts
+        uses: actions/github-script@v7
+        continue-on-error: true
+        with:
+          script: |
+            const res = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId,
+            });
+            for (const artifact of res.data.artifacts) {
+              if (artifact.name.startsWith('part-')) {
+                await github.rest.actions.deleteArtifact({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  artifact_id: artifact.id,
+                });
+              }
+            }

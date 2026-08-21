@@ -1,0 +1,24 @@
+This work is a derivative of "Backport Everything" (https://github.com/backporteverything/Backport-Everything) by samfortyseven, used under CC BY-SA 4.0. This modified version is licensed under CC BY-SA 4.0 by Kawwabi. To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/4.0/
+
+Note: Any vanilla Minecraft assets included in this pack remain the copyright of Mojang Studios and are NOT licensed under CC BY-SA 4.0.
+
+Thanks to xokz and MiffenKop, creators of the Connected Textures Overhaul, which I adapted to 1.8.9 and added the texture to my own.
+Thanks also to Screaming Brain Studios for making the cubemap that I edited and adapted for Minecraft.
+The other textures in this pack are my own creations or from Minecraft 26.2 itself, although most of them are slightly edited. If you're the curious type who wants to know how I changed the saturation of things, it's a little Linux command that I ran in a few folders.
+
+Here is the command:
+
+find . -type f -iname "*.png" -exec mogrify -modulate 100,165 -brightness-contrast -2x2 {} +
+
+// Tradução pra Português!!
+
+Este trabalho é um derivado de "Backport Everything" (https://github.com/backporteverything/Backport-Everything) por samfortyseven, usado sob a CC BY-SA 4.0. Esta versão modificada é licenciada sob a CC BY-SA 4.0 por Kawwabi. Para ver uma cópia desta licença, visite http://creativecommons.org/licenses/by-sa/4.0/
+Nota: Quaisquer recursos (assets) do Minecraft vanilla incluídos neste pacote continuam sendo de direitos autorais da Mojang Studios e NÃO estão licenciados sob a CC BY-SA 4.0.
+
+Obrigado ao xokz e MiffenKop, criadores da Connected Textures Overhaul que eu adaptei para a 1.8.9 e adicionei à minha textura.
+Obrigado também ao Screaming Brain Studios, por fazer o cubmap que eu editei e adaptei pro minecraft.
+As outras texturas desse pacote são autorais minhas ou do próprio minecraft 26.2, ainda que a maioria esteja levemente editada. Se você é do tipo curioso que quer saber como eu mudei a saturação das coisas, é um comandinho no linux que eu executei em algumas pastas.
+
+Aqui o comando:
+
+find . -type f -iname "*.png" -exec mogrify -modulate 100,165 -brightness-contrast -2x2 {} +

@@ -1,0 +1,1 @@
+Most if not all of the textures in here are implementations from Backport Everything, which is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0).

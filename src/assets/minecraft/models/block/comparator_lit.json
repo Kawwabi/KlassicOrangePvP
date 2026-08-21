@@ -1,0 +1,100 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "blocks/comparator_on",
+		"1": "blocks/redstone_torch_on",
+		"2": "blocks/redstone_torch_off",
+		"3": "blocks/stone_slab_top",
+		"particle": "blocks/comparator_on"
+	},
+	"elements": [
+		{
+			"name": "redstone_torch_0",
+			"from": [10, 2, 11],
+			"to": [12, 7, 13],
+			"shade": false,
+			"faces": {
+				"north": {"uv": [7, 6, 9, 11], "texture": "#1"},
+				"east": {"uv": [7, 6, 9, 11], "texture": "#1"},
+				"south": {"uv": [7, 6, 9, 11], "texture": "#1"},
+				"west": {"uv": [7, 6, 9, 11], "texture": "#1"},
+				"up": {"uv": [7, 6, 9, 8], "texture": "#1"}
+			}
+		},
+		{
+			"name": "redstone_torch_0_outer",
+			"from": [12.5, 4.5, 10.5],
+			"to": [9.5, 7.5, 13.5],
+			"shade": false,
+			"faces": {
+				"north": {"uv": [6, 5, 7, 6], "texture": "#1"},
+				"east": {"uv": [6, 5, 7, 6], "texture": "#1"},
+				"south": {"uv": [6, 5, 7, 6], "texture": "#1"},
+				"west": {"uv": [6, 5, 7, 6], "texture": "#1"},
+				"up": {"uv": [6, 5, 7, 6], "texture": "#1"},
+				"down": {"uv": [6, 5, 7, 6], "texture": "#1"}
+			}
+		},
+		{
+			"name": "redstone_torch_1",
+			"from": [6.5, 4.5, 10.5],
+			"to": [3.5, 7.5, 13.5],
+			"shade": false,
+			"faces": {
+				"north": {"uv": [6, 5, 7, 6], "texture": "#1"},
+				"east": {"uv": [6, 5, 7, 6], "texture": "#1"},
+				"south": {"uv": [6, 5, 7, 6], "texture": "#1"},
+				"west": {"uv": [6, 5, 7, 6], "texture": "#1"},
+				"up": {"uv": [6, 5, 7, 6], "texture": "#1"},
+				"down": {"uv": [6, 5, 7, 6], "texture": "#1"}
+			}
+		},
+		{
+			"name": "redstone_torch_1_outer",
+			"from": [4, 2, 11],
+			"to": [6, 7, 13],
+			"shade": false,
+			"faces": {
+				"north": {"uv": [7, 6, 9, 11], "texture": "#1"},
+				"east": {"uv": [7, 6, 9, 11], "texture": "#1"},
+				"south": {"uv": [7, 6, 9, 11], "texture": "#1"},
+				"west": {"uv": [7, 6, 9, 11], "texture": "#1"},
+				"up": {"uv": [7, 6, 9, 8], "texture": "#1"}
+			}
+		},
+		{
+			"name": "redstone_torch_off",
+			"from": [7, 2, 2],
+			"to": [9, 5, 4],
+			"faces": {
+				"north": {"uv": [7, 6, 9, 9], "texture": "#2"},
+				"east": {"uv": [7, 6, 9, 9], "texture": "#2"},
+				"south": {"uv": [7, 6, 9, 9], "texture": "#2"},
+				"west": {"uv": [7, 6, 9, 9], "texture": "#2"},
+				"up": {"uv": [7, 6, 9, 8], "texture": "#2"}
+			}
+		},
+		{
+			"name": "comparator_base",
+			"from": [0, 0, 0],
+			"to": [16, 2, 16],
+			"faces": {
+				"north": {"uv": [0, 14, 16, 16], "texture": "#3", "cullface": "north"},
+				"east": {"uv": [0, 14, 16, 16], "texture": "#3", "cullface": "east"},
+				"south": {"uv": [0, 14, 16, 16], "texture": "#3", "cullface": "south"},
+				"west": {"uv": [0, 14, 16, 16], "texture": "#3", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#3", "cullface": "down"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "comparator_on",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [0, 1, 2, 3, 4, 5]
+		}
+	]
+}

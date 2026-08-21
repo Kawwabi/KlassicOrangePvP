@@ -1,0 +1,1 @@
+seems important to keep this folder as base, considering the extra properties file, not 100% sure if that implementation works? well, it was the folks at the connected textures that set it that way and I'm a little too busy to find out if it does 100% need to be like that, so I'll leave as is.

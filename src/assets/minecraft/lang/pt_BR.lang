@@ -1,0 +1,46 @@
+# Abas do Criativo (1.8.9)
+itemGroup.buildingBlocks=§fBlocos de Construção
+itemGroup.decorations=§fBlocos Decorativos
+itemGroup.redstone=§fRedstone
+itemGroup.transportation=§fTransporte
+itemGroup.misc=§fDiversos
+itemGroup.search=§fPesquisar
+itemGroup.food=§fComida
+itemGroup.tools=§fFerramentas
+itemGroup.combat=§fCombate
+itemGroup.brewing=§fPoções
+itemGroup.materials=§fMateriais
+itemGroup.inventory=§fInventário de Sobrevivência
+itemGroup.hotbar=§fBarras de Objetos Salvas
+
+# Títulos de Containers e HUDs (1.8.9)
+container.inventory=§fInventário
+container.crafting=§fConstrução
+container.chest=§fBaú
+container.chestDouble=§fBaú Grande
+container.furnace=§fFornalha
+container.dispenser=§fEjetor
+container.dropper=§fLiberador
+container.hopper=§fFunil
+container.enchant=§fEncantar
+container.anvil=§fReparar e Nomear
+container.beacon=§fSinalizador
+container.brewing=§fSuporte de Poções
+container.shulkerBox=§fCaixa de Shulker
+
+# Itens legais :3
+
+entity.Snowball.name=§bBola de... Gelo?
+item.snowball.name=§bBola de... Gelo?
+item.swordWood.name=§6Porrete
+item.appleGold.name=§cCapirotinha
+item.swordDiamond.name=§cDiálogo
+
+# Achievement secreto
+
+achievement.overpowered=Com o djabo no corpo
+achievement.overpowered.desc=Faça uma maçã do Capiroto
+
+# Achievement secreto (1.12+)
+advancements.nether.all_potions.title=Com o djabo no corpo
+advancements.nether.all_potions.description=Faça uma maçã do Capiroto

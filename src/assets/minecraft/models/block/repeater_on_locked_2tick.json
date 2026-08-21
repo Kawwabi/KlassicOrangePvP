@@ -1,0 +1,73 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "blocks/bedrock",
+		"1": "blocks/redstone_torch_on",
+		"2": "blocks/repeater_on",
+		"3": "blocks/stone_slab_top",
+		"particle": "blocks/bedrock"
+	},
+	"elements": [
+		{
+			"name": "bedrock_lock",
+			"from": [2, 2, 8],
+			"to": [14, 4, 10],
+			"faces": {
+				"north": {"uv": [2, 7, 14, 9], "texture": "#0"},
+				"east": {"uv": [6, 7, 8, 9], "texture": "#0"},
+				"south": {"uv": [2, 7, 14, 9], "texture": "#0"},
+				"west": {"uv": [6, 7, 8, 9], "texture": "#0"},
+				"up": {"uv": [7, 2, 9, 14], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"name": "redstone_torch",
+			"from": [7, 2, 2],
+			"to": [9, 7, 4],
+			"shade": false,
+			"faces": {
+				"north": {"uv": [7, 6, 9, 11], "texture": "#1"},
+				"east": {"uv": [7, 6, 9, 11], "texture": "#1"},
+				"south": {"uv": [7, 6, 9, 11], "texture": "#1"},
+				"west": {"uv": [7, 6, 9, 11], "texture": "#1"},
+				"up": {"uv": [7, 6, 9, 8], "texture": "#1"}
+			}
+		},
+		{
+			"name": "redstone_torch_outer",
+			"from": [9.5, 4.5, 1.5],
+			"to": [6.5, 7.5, 4.5],
+			"shade": false,
+			"faces": {
+				"north": {"uv": [6, 5, 7, 6], "texture": "#1"},
+				"east": {"uv": [6, 5, 7, 6], "texture": "#1"},
+				"south": {"uv": [6, 5, 7, 6], "texture": "#1"},
+				"west": {"uv": [6, 5, 7, 6], "texture": "#1"},
+				"up": {"uv": [6, 5, 7, 6], "texture": "#1"},
+				"down": {"uv": [6, 5, 7, 6], "texture": "#1"}
+			}
+		},
+		{
+			"name": "repeater_base",
+			"from": [0, 0, 0],
+			"to": [16, 2, 16],
+			"faces": {
+				"north": {"uv": [0, 14, 16, 16], "texture": "#3", "cullface": "north"},
+				"east": {"uv": [0, 14, 16, 16], "texture": "#3", "cullface": "east"},
+				"south": {"uv": [0, 14, 16, 16], "texture": "#3", "cullface": "south"},
+				"west": {"uv": [0, 14, 16, 16], "texture": "#3", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#2"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#3", "cullface": "down"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "repeater_2tick_on_locked",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [0, 1, 2, 3]
+		}
+	]
+}

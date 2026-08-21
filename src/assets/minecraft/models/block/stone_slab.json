@@ -1,0 +1,9 @@
+{
+  "parent": "block/half_slab",
+  "textures": {
+    "bottom": "block/smooth_stone",
+    "top": "block/smooth_stone_slab_top",
+    "side": "block/stone_slab_side",
+    "particle": "block/smooth_stone"
+  }
+}

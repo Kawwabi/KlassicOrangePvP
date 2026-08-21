@@ -1,0 +1,4 @@
+Files for 1.8.9 in here were changed to CTM to fix a lighting/performance bug.
+The ones that weren't changed are for later versions of minecraft, which will support the new format anyway.
+
+Ignore my spaghetti code for the rest please ;-;

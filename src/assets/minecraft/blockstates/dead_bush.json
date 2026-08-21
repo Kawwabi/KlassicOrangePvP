@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "normal": [
+	  { "model": "dead_bush", "weight": 72 },
+	  { "model": "short_dry_grass", "weight": 14 },
+	  { "model": "tall_dry_grass", "weight": 14 }
+    ]
+  }
+}
