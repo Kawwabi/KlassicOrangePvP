@@ -302,7 +302,7 @@ jobs:
               find build_dir/assets/minecraft/mcpatcher/ -type f -name "*.properties" -exec sed -i 's/optifine\//mcpatcher\//g' {} + 2>/dev/null || true
             fi
 
-            # Prevent leaked modern 'item'/'block' folders on legacy 1.9–1.12.2
+            # Re-route any leaked 'item'/'block' directories to legacy plural equivalents
             if [ -d "build_dir/assets/minecraft/textures/item" ]; then
               mkdir -p build_dir/assets/minecraft/textures/items
               cp -rn build_dir/assets/minecraft/textures/item/. build_dir/assets/minecraft/textures/items/ 2>/dev/null || true
@@ -478,14 +478,13 @@ jobs:
               purge_glob("textures/**/gui/**/recipe_background*")
               purge_glob("textures/**/gui/**/gamemode_switcher*")
               purge_glob("textures/**/gui/**/advancements*")
-              # Wood signs
               purge_glob("textures/**/spruce_sign*")
               purge_glob("textures/**/birch_sign*")
               purge_glob("textures/**/jungle_sign*")
               purge_glob("textures/**/acacia_sign*")
               purge_glob("textures/**/dark_oak_sign*")
               purge_glob("textures/**/oak_sign*")
-              # Redundant modern dye identifiers (< 1.14)
+              # Modern separated dyes (< 1.14)
               purge_glob("textures/**/black_dye*")
               purge_glob("textures/**/white_dye*")
               purge_glob("textures/**/blue_dye*")
@@ -503,7 +502,7 @@ jobs:
               purge_glob("textures/**/pink_dye*")
               purge_glob("textures/**/purple_dye*")
 
-          # --- 1.13 FLATTENING CLEANUP (Format >= 4 vs Legacy) ---
+          # --- 1.13+ FLATTENING SEPARATION (Format >= 4 vs Legacy Formats 1, 2, 3) ---
           if fmt >= 4:
               purge_glob("textures/item/bow_standby.png")
               purge_glob("textures/item/minecart_normal.png")
@@ -547,7 +546,10 @@ jobs:
               purge_glob("textures/item/map_empty.png")
               purge_glob("textures/item/map_filled.png")
               purge_glob("textures/item/totem.png")
+              purge_glob("textures/item/carrot_golden.png")
+              purge_glob("textures/item/apple_golden.png")
           else:
+              # Purge modern-only names in legacy packs (Formats 1, 2, 3)
               purge_glob("textures/items/bow.png")
               purge_glob("textures/items/minecart.png")
               purge_glob("textures/items/chest_minecart.png")
@@ -580,51 +582,52 @@ jobs:
               purge_glob("textures/items/splash_potion.png")
               purge_glob("textures/items/lingering_potion.png")
               purge_glob("textures/items/experience_bottle.png")
+              purge_glob("textures/items/wooden_*.png")
+              purge_glob("textures/items/golden_*.png")
+              purge_glob("textures/items/beef.png")
+              purge_glob("textures/items/cooked_beef.png")
+              purge_glob("textures/items/chicken.png")
+              purge_glob("textures/items/cooked_chicken.png")
+              purge_glob("textures/items/porkchop.png")
+              purge_glob("textures/items/cooked_porkchop.png")
+              purge_glob("textures/items/mutton.png")
+              purge_glob("textures/items/cooked_mutton.png")
+              purge_glob("textures/items/rabbit.png")
+              purge_glob("textures/items/cooked_rabbit.png")
+              purge_glob("textures/items/cod.png")
+              purge_glob("textures/items/cooked_cod.png")
+              purge_glob("textures/items/salmon.png")
+              purge_glob("textures/items/cooked_salmon.png")
+              purge_glob("textures/items/tropical_fish.png")
+              purge_glob("textures/items/pufferfish.png")
+              purge_glob("textures/items/melon_slice.png")
+              purge_glob("textures/items/glistering_melon_slice.png")
+              purge_glob("textures/items/slime_ball.png")
+              purge_glob("textures/items/nether_brick.png")
+              purge_glob("textures/items/written_book.png")
+              purge_glob("textures/items/writable_book.png")
+              purge_glob("textures/items/enchanted_book.png")
+              purge_glob("textures/items/book.png")
+              purge_glob("textures/items/potion.png")
+              purge_glob("textures/items/bone_meal.png")
+              purge_glob("textures/items/cocoa_beans.png")
+              purge_glob("textures/items/lapis_lazuli.png")
+              purge_glob("textures/items/ink_sac.png")
+              purge_glob("textures/items/charcoal.png")
+              purge_glob("textures/items/bucket.png")
+              purge_glob("textures/items/water_bucket.png")
+              purge_glob("textures/items/lava_bucket.png")
+              purge_glob("textures/items/milk_bucket.png")
+              purge_glob("textures/items/firework_star*.png")
+              purge_glob("textures/items/firework_rocket.png")
+              purge_glob("textures/items/fireball.png")
 
+              # Clock & Compass handling (1.9–1.12.2 dial frames vs 1.8.9 single texture)
               if fmt >= 2:
-                  # 1.9 - 1.12.2 items
                   purge_glob("textures/items/clock.png")
                   purge_glob("textures/items/clock.png.mcmeta")
                   purge_glob("textures/items/compass.png")
                   purge_glob("textures/items/compass.png.mcmeta")
-                  purge_glob("textures/items/wood_*.png")
-                  purge_glob("textures/items/door_wood.png")
-                  purge_glob("textures/items/gold_sword.png")
-                  purge_glob("textures/items/gold_axe.png")
-                  purge_glob("textures/items/gold_pickaxe.png")
-                  purge_glob("textures/items/gold_shovel.png")
-                  purge_glob("textures/items/gold_hoe.png")
-                  purge_glob("textures/items/gold_helmet.png")
-                  purge_glob("textures/items/gold_chestplate.png")
-                  purge_glob("textures/items/gold_leggings.png")
-                  purge_glob("textures/items/gold_boots.png")
-                  purge_glob("textures/items/gold_horse_armor.png")
-                  purge_glob("textures/items/apple_golden.png")
-                  purge_glob("textures/items/carrot_golden.png")
-                  purge_glob("textures/items/slimeball.png")
-                  purge_glob("textures/items/netherbrick.png")
-                  purge_glob("textures/items/melon_speckled.png")
-                  purge_glob("textures/items/fish_clownfish_raw.png")
-                  purge_glob("textures/items/fish_cod_raw.png")
-                  purge_glob("textures/items/fish_cod_cooked.png")
-                  purge_glob("textures/items/fish_salmon_raw.png")
-                  purge_glob("textures/items/fish_salmon_cooked.png")
-                  purge_glob("textures/items/fish_pufferfish_raw.png")
-                  purge_glob("textures/items/beef_raw.png")
-                  purge_glob("textures/items/beef_cooked.png")
-                  purge_glob("textures/items/chicken_raw.png")
-                  purge_glob("textures/items/chicken_cooked.png")
-                  purge_glob("textures/items/porkchop_raw.png")
-                  purge_glob("textures/items/porkchop_cooked.png")
-                  purge_glob("textures/items/mutton_raw.png")
-                  purge_glob("textures/items/mutton_cooked.png")
-                  purge_glob("textures/items/rabbit_raw.png")
-                  purge_glob("textures/items/rabbit_cooked.png")
-                  purge_glob("textures/items/potion_bottle_empty.png")
-                  purge_glob("textures/items/potion_bottle_drinkable.png")
-                  purge_glob("textures/items/potion_bottle_splash.png")
-                  purge_glob("textures/items/fireworks_charge*.png")
-                  purge_glob("textures/items/fireworks.png")
 
           # --- 1.11 - 1.12+ (Format < 3) ---
           if fmt < 3:
@@ -672,29 +675,8 @@ jobs:
               for color in bed_colors:
                   purge_glob(f"textures/**/blocks/{color}_bed_*")
 
-              # Modern item texture aliases in 1.8.9
-              redundant_modern_1_8 = [
-                  "items/beef.png", "items/cooked_beef.png", "items/chicken.png",
-                  "items/cooked_chicken.png", "items/porkchop.png", "items/cooked_porkchop.png",
-                  "items/rabbit.png", "items/cooked_rabbit.png", "items/mutton.png",
-                  "items/cooked_mutton.png", "items/cod.png", "items/cooked_cod.png",
-                  "items/salmon.png", "items/cooked_salmon.png", "items/tropical_fish.png",
-                  "items/pufferfish.png", "items/melon_slice.png", "items/glistering_melon_slice.png",
-                  "items/slime_ball.png", "items/firework_star*.png", "items/firework_rocket.png",
-                  "items/fireball.png", "items/nether_brick.png", "items/wooden_axe.png",
-                  "items/wooden_hoe.png", "items/wooden_pickaxe.png", "items/wooden_shovel.png",
-                  "items/wooden_sword.png", "items/wooden_armorstand.png", "items/golden_axe.png",
-                  "items/golden_boots.png", "items/golden_chestplate.png", "items/golden_helmet.png",
-                  "items/golden_hoe.png", "items/golden_horse_armor.png", "items/golden_leggings.png",
-                  "items/golden_pickaxe.png", "items/golden_shovel.png", "items/golden_sword.png",
-                  "items/golden_apple.png", "items/golden_carrot.png", "items/oak_door.png",
-                  "items/iron_door.png", "items/birch_door.png", "items/spruce_door.png",
-                  "items/jungle_door.png", "items/acacia_door.png", "items/dark_oak_door.png",
-                  "items/map.png", "items/filled_map*.png", "items/written_book.png",
-                  "items/writable_book.png", "items/enchanted_book.png", "items/potion.png",
-                  "items/bone_meal.png", "items/cocoa_beans.png", "items/lapis_lazuli.png",
-                  "items/ink_sac.png", "items/charcoal.png", "items/bucket.png", "items/water_bucket.png",
-                  "items/lava_bucket.png", "items/milk_bucket.png", "items/book.png",
+              # Modern blocks in 1.8.9
+              redundant_blocks_1_8 = [
                   "blocks/carrots_stage[0-7].png", "blocks/cocoa_stage[0-7].png",
                   "blocks/nether_wart_stage[0-7].png", "blocks/oak_planks.png", "blocks/birch_planks.png",
                   "blocks/spruce_planks.png", "blocks/jungle_planks.png", "blocks/acacia_planks.png",
@@ -709,7 +691,7 @@ jobs:
                   "blocks/nether_bricks.png", "blocks/nether_portal.png", "blocks/iron_door_*.png",
                   "blocks/oak_door_*.png", "blocks/andesite.png", "blocks/diorite.png", "blocks/granite.png"
               ]
-              for pat in redundant_modern_1_8:
+              for pat in redundant_blocks_1_8:
                   purge_glob("textures/" + pat)
 
           # Clean up empty directories
