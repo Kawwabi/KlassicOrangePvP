@@ -5,11 +5,15 @@ on:
     types: [published]
   workflow_dispatch:
     inputs:
-      all:
-        description: 'Build ALL versions'
-        required: false
-        default: false
-        type: boolean
+      mode:
+        description: 'Selection Mode'
+        type: choice
+        options:
+          - 'only'
+          - 'all_but'
+          - 'all'
+        default: 'only'
+        required: true
       v_1_8:
         description: '1.6.1-1.8.9'
         required: false
@@ -89,6 +93,7 @@ jobs:
         shell: bash
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
+      count: ${{ steps.set-matrix.outputs.count }}
     steps:
       - name: Calculate Target Matrix
         id: set-matrix
@@ -112,11 +117,17 @@ jobs:
             {"key": "v_1_20_2", "filename": "1.20.2-26.x", "mc_ver": "1.21.4", "format": 88, "is_modern": true}
           ]'
 
-          if [ "$EVENT_NAME" = "release" ] || [ "$(echo "$INPUTS_JSON" | jq -r '.all // false')" = "true" ]; then
+          MODE=$(echo "$INPUTS_JSON" | jq -r '.mode // "only"')
+
+          if [ "$EVENT_NAME" = "release" ] || [ "$MODE" = "all" ]; then
             COMPACT=$(echo "$ALL_VERSIONS" | jq -c '{include: .}')
+          elif [ "$MODE" = "all_but" ]; then
+            COMPACT=$(echo "$ALL_VERSIONS" | jq -c --argjson inputs "$INPUTS_JSON" '{
+              include: [.[] | select(($inputs[.key] // false) == false)]
+            }')
           else
             COMPACT=$(echo "$ALL_VERSIONS" | jq -c --argjson inputs "$INPUTS_JSON" '{
-              include: [.[] | select($inputs[.key] == true)]
+              include: [.[] | select(($inputs[.key] // false) == true)]
             }')
           fi
 
@@ -127,11 +138,12 @@ jobs:
           fi
 
           echo "matrix=$COMPACT" >> "$GITHUB_OUTPUT"
+          echo "count=$SELECTED_COUNT" >> "$GITHUB_OUTPUT"
 
   build_packs:
     name: Build ${{ matrix.filename }}
     needs: setup
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     defaults:
       run:
         shell: bash
@@ -556,7 +568,15 @@ jobs:
         with:
           files: "Klassic Orange PvP-${{ matrix.filename }}.zip"
           
-      - name: Stage Pack Artifact
+      - name: Upload Single Pack Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Klassic-Orange-PvP-${{ matrix.filename }}
+          path: "Klassic Orange PvP-${{ matrix.filename }}.zip"
+          retention-days: 1
+
+      - name: Stage Pack Artifact for Bundler
+        if: needs.setup.outputs.count > 1
         uses: actions/upload-artifact@v4
         with:
           name: part-${{ matrix.filename }}
@@ -565,12 +585,16 @@ jobs:
 
   bundle_artifacts:
     name: Bundle All Packs
-    needs: build_packs
+    needs: [setup, build_packs]
+    if: needs.setup.outputs.count > 1
     runs-on: self-hosted
     defaults:
       run:
         shell: bash
     steps:
+      - name: Clean Runner Directory
+        run: rm -rf bundle_output
+
       - name: Download all staged packs
         uses: actions/download-artifact@v4
         with:
@@ -578,10 +602,10 @@ jobs:
           merge-multiple: true
           path: bundle_output
 
-      - name: Upload Single Grouped Bundle
+      - name: Upload Grouped Bundle
         uses: actions/upload-artifact@v4
         with:
-          name: Klassic-Orange-PvP-Packs
+          name: Klassic-Orange-PvP-All-Selected-Packs
           path: bundle_output/*.zip
           retention-days: 1
 
