@@ -15,7 +15,7 @@ itemGroup.hotbar=§fBarras de Objetos Salvas
 
 # Títulos de Containers e HUDs (1.8.9)
 container.inventory=§fInventário
-container.crafting=§fConstrução
+container.crafting=§fCriando
 container.chest=§fBaú
 container.chestDouble=§fBaú Grande
 container.furnace=§fFornalha
@@ -33,7 +33,7 @@ container.shulkerBox=§fCaixa de Shulker
 entity.Snowball.name=§bBola de... Gelo?
 item.snowball.name=§bBola de... Gelo?
 item.swordWood.name=§6Porrete
-item.flintAndSteel.name=§c'PEDRA E AÇO'
+item.flintAndSteel.name=§c"PEDRA E AÇO!!"
 item.appleGold.name=§cCapirotinha
 item.swordDiamond.name=§cDiálogo
 

@@ -541,7 +541,7 @@ jobs:
             never_store_squash_times = true
             spooling_buffers_size = 512
             zip_compression_iterations = 255
-            zip_spec_conformance_level = 'disregard'
+            zip_spec_conformance_level = 'pedantic'
             recompress_compressed_files = true
 
             # Per-file Options (These apply ONLY to PNG files)
