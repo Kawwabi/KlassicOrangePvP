@@ -269,15 +269,33 @@ jobs:
             rm -rf build_dir/assets/minecraft/textures/gui/sprites 2>/dev/null || true
           fi
 
-          # --- 2. REMOVE CONVERTER INTERFERENCE ---
+          # --- 2. REMOVE CONVERTER INTERFERENCE (Excluding command blocks) ---
           find build_dir/assets/minecraft/blockstates/ -type f \( -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
-          find build_dir/assets/minecraft/models/block/ -type f \( -name "*banner*.json" -o -name "*command_block*.json" -o -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
-          find build_dir/assets/minecraft/models/item/ -type f \( -name "*banner*.json" -o -name "*command_block*.json" -o -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
+          find build_dir/assets/minecraft/models/block/ -type f \( -name "*banner*.json" -o -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
+          find build_dir/assets/minecraft/models/item/ -type f \( -name "*banner*.json" -o -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
           find build_dir/assets/minecraft/textures/entity/ -name "*banner*.png" -type f -delete 2>/dev/null || true
           rm -rf build_dir/assets/minecraft/textures/entity/banner/ 2>/dev/null || true
 
-          # --- 3. MODERN ERA FIXES (1.13+) ---
+          # --- 2a. COMMAND BLOCK MODEL HANDLING ---
           if [ "${{ matrix.format }}" -ge 4 ]; then
+            # Format 4+ (Flattening+): Use modern overrides referencing block/
+            if [ -d "modern_override/assets/minecraft/models/block" ]; then
+              cp -f modern_override/assets/minecraft/models/block/*command_block*.json build_dir/assets/minecraft/models/block/ 2>/dev/null || true
+            fi
+          fi
+
+          # --- 3. ERA MCPATCHER / OPTIFINE FOLDER FIXES ---
+          if [ "${{ matrix.format }}" -lt 4 ]; then
+            if [ -d "build_dir/assets/minecraft/optifine" ]; then
+              mkdir -p build_dir/assets/minecraft/mcpatcher
+              cp -rn build_dir/assets/minecraft/optifine/. build_dir/assets/minecraft/mcpatcher/ 2>/dev/null || true
+              rm -rf build_dir/assets/minecraft/optifine
+            fi
+
+            if [ -d "build_dir/assets/minecraft/mcpatcher" ]; then
+              find build_dir/assets/minecraft/mcpatcher/ -type f -name "*.properties" -exec sed -i 's/optifine\//mcpatcher\//g' {} + 2>/dev/null || true
+            fi
+          else
             if [ -d "build_dir/assets/minecraft/mcpatcher" ]; then
               mkdir -p build_dir/assets/minecraft/optifine
               cp -rn build_dir/assets/minecraft/mcpatcher/. build_dir/assets/minecraft/optifine/ 2>/dev/null || true
@@ -397,6 +415,10 @@ jobs:
               purge_glob("textures/**/gui/**/blast_furnace*")
               purge_glob("textures/**/gui/**/smoker*")
               purge_glob("textures/**/gui/**/smithing*")
+              purge_glob("textures/**/misc/enchanted_glint_item.png")
+              purge_glob("textures/**/misc/enchanted_glint_armor.png")
+          else:
+              purge_glob("textures/**/misc/enchanted_item_glint.png")
 
           # --- 1.13 - 1.14+ (Format < 4) ---
           if fmt < 4:
@@ -451,6 +473,9 @@ jobs:
 
           # --- 1.9 - 1.10+ (Format == 1 / 1.8.9 Base) ---
           if fmt == 1:
+              purge_glob("models/block/*command_block*.json")
+              purge_glob("models/item/*command_block*.json")
+              purge_glob("blockstates/*command_block*.json")
               purge_glob("**/ctm/**/bone*")
               purge_glob("**/ctm/**/purpur*")
               purge_glob("blockstates/purpur_pillar.json")
@@ -526,6 +551,7 @@ jobs:
 
           print(f"Asset pruning complete for Format {fmt}.")
           EOF
+
 
       - name: Inject Legacy mcmeta (Formats 1-15)
         if: '!matrix.is_modern'
