@@ -187,31 +187,27 @@ jobs:
           fi
           rm -rf ToConvert ToConvert_* converter.jar
 
-          # --- 1. APPLY OVERRIDES FIRST ---
-          if [ -d "modern_override" ]; then
-            cp -r modern_override/* build_dir/
-          fi
+          # --- 1. SELECTIVE OVERRIDES & CONVERSION CLEANUP ---
 
-          # --- 1a. CREATIVE TABS OVERRIDE (Format 12+) ---
+          # Creative Tabs Override (Format 12+)
           CREATIVE_GUI="build_dir/assets/minecraft/textures/gui/container/creative_inventory"
           if [ "${{ matrix.format }}" -ge 12 ]; then
-            if [ -f "$CREATIVE_GUI/tabsfor1.19.3+.png" ]; then
-              mv -f "$CREATIVE_GUI/tabsfor1.19.3+.png" "$CREATIVE_GUI/tabs.png"
+            if [ -f "modern_override/assets/minecraft/textures/gui/container/creative_inventory/tabsfor1.19.3+.png" ]; then
+              mkdir -p "$CREATIVE_GUI"
+              cp -f "modern_override/assets/minecraft/textures/gui/container/creative_inventory/tabsfor1.19.3+.png" "$CREATIVE_GUI/tabs.png"
             fi
-          else
-            rm -f "$CREATIVE_GUI/tabsfor1.19.3+.png" 2>/dev/null || true
           fi
+          rm -f "$CREATIVE_GUI/tabsfor1.19.3+.png" 2>/dev/null || true
 
-          # --- 1b. SPAWN EGGS FOR 1.9 TO 1.12.2 (Formats 2 & 3) ---
+          # Spawn Eggs for 1.9 to 1.12.2 (Formats 2 & 3)
           if [ "${{ matrix.format }}" -ge 2 ] && [ "${{ matrix.format }}" -lt 4 ]; then
             if [ -d "modern_override/assets/minecraft/optifine/cit/spawn_egg" ]; then
               mkdir -p build_dir/assets/minecraft/mcpatcher/cit/spawn_egg
               cp -r modern_override/assets/minecraft/optifine/cit/spawn_egg/* build_dir/assets/minecraft/mcpatcher/cit/spawn_egg/ 2>/dev/null || true
-              rm -rf build_dir/assets/minecraft/optifine/cit/spawn_egg/ 2>/dev/null || true
             fi
           fi
 
-          # --- 1c. BED MODELS (Format 2 Only) ---
+          # Bed Models (Format 2 Only)
           if [ "${{ matrix.format }}" -eq 2 ]; then
             mkdir -p build_dir/assets/minecraft/models/item build_dir/assets/minecraft/models/block
             find build_dir/assets/minecraft/models/item/ -type f -name "*bed*.json" -delete 2>/dev/null || true
@@ -224,14 +220,42 @@ jobs:
             fi
           fi
 
-          # --- 1d. CLEANUP BED MODELS (Format 3+) ---
+          # Cleanup Bed Models (Format 3+)
           if [ "${{ matrix.format }}" -ge 3 ]; then
             find build_dir/assets/minecraft/models/item/ -type f -name "*bed*.json" -delete 2>/dev/null || true
             find build_dir/assets/minecraft/models/block/ -type f -name "*bed*.json" -delete 2>/dev/null || true
             find build_dir/assets/minecraft/blockstates/ -type f -name "*bed*.json" -delete 2>/dev/null || true
           fi
 
-          # --- 1e. LOCALE FILES FOR 1.9 - 1.12.2 (Formats 2 & 3) ---
+          # Command Block Models: Pre-Flattening (Formats 2 & 3) vs Modern (Format 4+)
+          if [ "${{ matrix.format }}" -ge 2 ] && [ "${{ matrix.format }}" -lt 4 ]; then
+            if [ -d "src/assets/minecraft/models/block" ]; then
+              mkdir -p build_dir/assets/minecraft/models/block
+              cp -f src/assets/minecraft/models/block/*command_block*.json build_dir/assets/minecraft/models/block/ 2>/dev/null || true
+            fi
+          elif [ "${{ matrix.format }}" -ge 4 ]; then
+            if [ -d "modern_override/assets/minecraft/models/block" ]; then
+              mkdir -p build_dir/assets/minecraft/models/block
+              cp -f modern_override/assets/minecraft/models/block/*command_block*.json build_dir/assets/minecraft/models/block/ 2>/dev/null || true
+            fi
+          fi
+
+          # Modern GUI Sprites (Format 18+)
+          if [ "${{ matrix.format }}" -ge 18 ]; then
+            if [ -d "modern_override/assets/minecraft/textures/gui/sprites" ]; then
+              mkdir -p build_dir/assets/minecraft/textures/gui/sprites
+              cp -rf modern_override/assets/minecraft/textures/gui/sprites/. build_dir/assets/minecraft/textures/gui/sprites/ 2>/dev/null || true
+            fi
+          fi
+
+          # Modern Overrides for Format 4+ (Flattening+)
+          if [ "${{ matrix.format }}" -ge 4 ]; then
+            if [ -d "modern_override" ]; then
+              cp -rn modern_override/* build_dir/ 2>/dev/null || true
+            fi
+          fi
+
+          # Locale Files for 1.9 - 1.12.2 (Formats 2 & 3)
           if [ "${{ matrix.format }}" -eq 3 ]; then
             mkdir -p build_dir/assets/minecraft/lang
             if [ -f "build_dir/assets/minecraft/lang/pt_BR.lang" ]; then
@@ -242,7 +266,7 @@ jobs:
             rm -f build_dir/assets/minecraft/lang/*.json 2>/dev/null || true
           fi
 
-          # --- 1f. LOCALE FILES FOR 1.13+ (Format 4+) ---
+          # Locale Files for 1.13+ (Format 4+)
           if [ "${{ matrix.format }}" -ge 4 ]; then
             mkdir -p build_dir/assets/minecraft/lang
             if [ -f "build_dir/assets/minecraft/lang/pt_BR.json" ]; then
@@ -251,7 +275,7 @@ jobs:
             rm -f build_dir/assets/minecraft/lang/*.lang 2>/dev/null || true
           fi
 
-          # --- 1g. MOJANG SPLASH SCREEN (Format 6+) ---
+          # Mojang Splash Screen (Format 6+)
           TITLE_GUI="build_dir/assets/minecraft/textures/gui/title"
           if [ "${{ matrix.format }}" -ge 6 ]; then
             rm -f "$TITLE_GUI/mojang.png" 2>/dev/null || true
@@ -259,30 +283,12 @@ jobs:
             rm -f "$TITLE_GUI/mojangstudios.png" 2>/dev/null || true
           fi
 
-          # --- 1h. MODERN GUI SPRITES (Format 18+) ---
-          if [ "${{ matrix.format }}" -ge 18 ]; then
-            if [ -d "modern_override/assets/minecraft/textures/gui/sprites" ]; then
-              mkdir -p build_dir/assets/minecraft/textures/gui/sprites
-              cp -rf modern_override/assets/minecraft/textures/gui/sprites/. build_dir/assets/minecraft/textures/gui/sprites/ 2>/dev/null || true
-            fi
-          else
-            rm -rf build_dir/assets/minecraft/textures/gui/sprites 2>/dev/null || true
-          fi
-
-          # --- 2. REMOVE CONVERTER INTERFERENCE (Excluding command blocks) ---
+          # --- 2. REMOVE CONVERTER INTERFERENCE ---
           find build_dir/assets/minecraft/blockstates/ -type f \( -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
           find build_dir/assets/minecraft/models/block/ -type f \( -name "*banner*.json" -o -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
           find build_dir/assets/minecraft/models/item/ -type f \( -name "*banner*.json" -o -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
           find build_dir/assets/minecraft/textures/entity/ -name "*banner*.png" -type f -delete 2>/dev/null || true
           rm -rf build_dir/assets/minecraft/textures/entity/banner/ 2>/dev/null || true
-
-          # --- 2a. COMMAND BLOCK MODEL HANDLING ---
-          if [ "${{ matrix.format }}" -ge 4 ]; then
-            # Format 4+ (Flattening+): Use modern overrides referencing block/
-            if [ -d "modern_override/assets/minecraft/models/block" ]; then
-              cp -f modern_override/assets/minecraft/models/block/*command_block*.json build_dir/assets/minecraft/models/block/ 2>/dev/null || true
-            fi
-          fi
 
           # --- 3. ERA MCPATCHER / OPTIFINE FOLDER FIXES ---
           if [ "${{ matrix.format }}" -lt 4 ]; then
@@ -294,6 +300,18 @@ jobs:
 
             if [ -d "build_dir/assets/minecraft/mcpatcher" ]; then
               find build_dir/assets/minecraft/mcpatcher/ -type f -name "*.properties" -exec sed -i 's/optifine\//mcpatcher\//g' {} + 2>/dev/null || true
+            fi
+
+            # Prevent leaked modern 'item'/'block' folders on legacy 1.9–1.12.2
+            if [ -d "build_dir/assets/minecraft/textures/item" ]; then
+              mkdir -p build_dir/assets/minecraft/textures/items
+              cp -rn build_dir/assets/minecraft/textures/item/. build_dir/assets/minecraft/textures/items/ 2>/dev/null || true
+              rm -rf build_dir/assets/minecraft/textures/item
+            fi
+            if [ -d "build_dir/assets/minecraft/textures/block" ]; then
+              mkdir -p build_dir/assets/minecraft/textures/blocks
+              cp -rn build_dir/assets/minecraft/textures/block/. build_dir/assets/minecraft/textures/blocks/ 2>/dev/null || true
+              rm -rf build_dir/assets/minecraft/textures/block
             fi
           else
             if [ -d "build_dir/assets/minecraft/mcpatcher" ]; then
@@ -362,14 +380,13 @@ jobs:
                   except Exception:
                       pass
 
-          # --- 1.21.9+ (Format < 88) ---
+          # --- 1.21+ (Format < 88) ---
           if fmt < 88:
               purge_glob("**/ctm/**/crafter*")
               purge_glob("**/ctm/**/polished_tuff*")
               purge_glob("**/ctm/**/copper/grate*")
               purge_glob("**/ctm/**/copper/chiseled*")
               purge_glob("textures/**/gui/**/crafter*")
-              # Copper equipment & tools
               purge_glob("textures/**/copper_axe*")
               purge_glob("textures/**/copper_hoe*")
               purge_glob("textures/**/copper_pickaxe*")
@@ -380,6 +397,8 @@ jobs:
               purge_glob("textures/**/copper_leggings*")
               purge_glob("textures/**/copper_boots*")
               purge_glob("textures/**/mace*")
+              purge_glob("textures/**/flow_banner_pattern*")
+              purge_glob("textures/**/guster_banner_pattern*")
 
           # --- 1.19+ (Format < 9) ---
           if fmt < 9:
@@ -395,6 +414,12 @@ jobs:
               purge_glob("**/ctm/**/glass/tinted_glass*")
               purge_glob("**/ctm/**/metals_and_gems/ore/copper_ore*")
               purge_glob("**/ctm/**/metals_and_gems/ore/deepslate_*")
+              purge_glob("textures/**/axolotl_bucket*")
+
+          # --- 1.16+ (Format < 6) ---
+          if fmt < 6:
+              purge_glob("textures/**/netherite_*")
+              purge_glob("textures/**/piglin_banner_pattern*")
 
           # --- 1.15 - 1.16+ (Format < 5) ---
           if fmt < 5:
@@ -420,8 +445,9 @@ jobs:
           else:
               purge_glob("textures/**/misc/enchanted_item_glint.png")
 
-          # --- 1.13 - 1.14+ (Format < 4) ---
+          # --- 1.14+ (Format < 4) ---
           if fmt < 4:
+              purge_glob("textures/items/structure_void*")
               purge_glob("**/ctm/**/cartography_table*")
               purge_glob("**/ctm/**/loom*")
               purge_glob("textures/**/blocks/blue_ice.png")
@@ -430,6 +456,19 @@ jobs:
               purge_glob("textures/**/blocks/lectern_*.png")
               purge_glob("textures/**/blocks/cut_*_sandstone.png")
               purge_glob("textures/**/crossbow*")
+              purge_glob("textures/**/campfire*")
+              purge_glob("textures/**/lantern*")
+              purge_glob("textures/**/phantom_membrane*")
+              purge_glob("textures/**/sweet_berries*")
+              purge_glob("textures/**/globe_banner_pattern*")
+              purge_glob("textures/**/creeper_banner_pattern*")
+              purge_glob("textures/**/flower_banner_pattern*")
+              purge_glob("textures/**/mojang_banner_pattern*")
+              purge_glob("textures/**/skull_banner_pattern*")
+              purge_glob("textures/**/cod_bucket*")
+              purge_glob("textures/**/salmon_bucket*")
+              purge_glob("textures/**/pufferfish_bucket*")
+              purge_glob("textures/**/tropical_fish_bucket*")
               purge_glob("textures/**/gui/**/cartography_table*")
               purge_glob("textures/**/gui/**/grindstone*")
               purge_glob("textures/**/gui/**/loom*")
@@ -439,37 +478,161 @@ jobs:
               purge_glob("textures/**/gui/**/recipe_background*")
               purge_glob("textures/**/gui/**/gamemode_switcher*")
               purge_glob("textures/**/gui/**/advancements*")
-              # Custom wood signs (< 1.14)
+              # Wood signs
               purge_glob("textures/**/spruce_sign*")
               purge_glob("textures/**/birch_sign*")
               purge_glob("textures/**/jungle_sign*")
               purge_glob("textures/**/acacia_sign*")
               purge_glob("textures/**/dark_oak_sign*")
+              purge_glob("textures/**/oak_sign*")
               # Redundant modern dye identifiers (< 1.14)
               purge_glob("textures/**/black_dye*")
               purge_glob("textures/**/white_dye*")
               purge_glob("textures/**/blue_dye*")
               purge_glob("textures/**/brown_dye*")
+              purge_glob("textures/**/red_dye*")
+              purge_glob("textures/**/green_dye*")
+              purge_glob("textures/**/yellow_dye*")
+              purge_glob("textures/**/cyan_dye*")
+              purge_glob("textures/**/gray_dye*")
+              purge_glob("textures/**/light_blue_dye*")
+              purge_glob("textures/**/light_gray_dye*")
+              purge_glob("textures/**/lime_dye*")
+              purge_glob("textures/**/magenta_dye*")
+              purge_glob("textures/**/orange_dye*")
+              purge_glob("textures/**/pink_dye*")
+              purge_glob("textures/**/purple_dye*")
 
-          # --- FLATTENING NAME DEDUPLICATION (1.13+ vs Legacy) ---
+          # --- 1.13 FLATTENING CLEANUP (Format >= 4 vs Legacy) ---
           if fmt >= 4:
-              # 1.13+ uses bow.png and minecart.png
               purge_glob("textures/item/bow_standby.png")
               purge_glob("textures/item/minecart_normal.png")
-              purge_glob("textures/item/clock.png")
-              purge_glob("textures/item/clock.png.mcmeta")
-              purge_glob("textures/item/compass.png")
-              purge_glob("textures/item/compass.png.mcmeta")
+              purge_glob("textures/item/minecart_*.png")
+              purge_glob("textures/item/door_*.png")
+              purge_glob("textures/item/wood_*.png")
+              purge_glob("textures/item/gold_*.png")
+              purge_glob("textures/item/dye_powder_*.png")
+              purge_glob("textures/item/fish_*_raw.png")
+              purge_glob("textures/item/fish_*_cooked.png")
+              purge_glob("textures/item/beef_raw.png")
+              purge_glob("textures/item/beef_cooked.png")
+              purge_glob("textures/item/chicken_raw.png")
+              purge_glob("textures/item/chicken_cooked.png")
+              purge_glob("textures/item/porkchop_raw.png")
+              purge_glob("textures/item/porkchop_cooked.png")
+              purge_glob("textures/item/mutton_raw.png")
+              purge_glob("textures/item/mutton_cooked.png")
+              purge_glob("textures/item/rabbit_raw.png")
+              purge_glob("textures/item/rabbit_cooked.png")
+              purge_glob("textures/item/record_*.png")
+              purge_glob("textures/item/seeds_*.png")
+              purge_glob("textures/item/potion_bottle_*.png")
+              purge_glob("textures/item/empty_armor_slot_*.png")
+              purge_glob("textures/item/fireworks_charge*.png")
+              purge_glob("textures/item/fireworks.png")
+              purge_glob("textures/item/redstone_dust.png")
+              purge_glob("textures/item/reeds.png")
+              purge_glob("textures/item/melon_speckled.png")
+              purge_glob("textures/item/slimeball.png")
+              purge_glob("textures/item/netherbrick.png")
+              purge_glob("textures/item/sign.png")
+              purge_glob("textures/item/bucket_empty.png")
+              purge_glob("textures/item/bucket_water.png")
+              purge_glob("textures/item/bucket_lava.png")
+              purge_glob("textures/item/bucket_milk.png")
+              purge_glob("textures/item/book_normal.png")
+              purge_glob("textures/item/book_enchanted.png")
+              purge_glob("textures/item/book_writable.png")
+              purge_glob("textures/item/book_written.png")
+              purge_glob("textures/item/map_empty.png")
+              purge_glob("textures/item/map_filled.png")
+              purge_glob("textures/item/totem.png")
           else:
-              # 1.8–1.12.2 uses bow_standby.png and minecart_normal.png
               purge_glob("textures/items/bow.png")
               purge_glob("textures/items/minecart.png")
-              purge_glob("textures/items/clock_*.png")
-              purge_glob("textures/items/compass_*.png")
+              purge_glob("textures/items/chest_minecart.png")
+              purge_glob("textures/items/furnace_minecart.png")
+              purge_glob("textures/items/tnt_minecart.png")
+              purge_glob("textures/items/hopper_minecart.png")
+              purge_glob("textures/items/command_block_minecart.png")
+              purge_glob("textures/items/oak_door.png")
+              purge_glob("textures/items/spruce_door.png")
+              purge_glob("textures/items/birch_door.png")
+              purge_glob("textures/items/jungle_door.png")
+              purge_glob("textures/items/acacia_door.png")
+              purge_glob("textures/items/dark_oak_door.png")
+              purge_glob("textures/items/iron_door.png")
+              purge_glob("textures/items/oak_boat.png")
+              purge_glob("textures/items/spruce_boat.png")
+              purge_glob("textures/items/birch_boat.png")
+              purge_glob("textures/items/jungle_boat.png")
+              purge_glob("textures/items/acacia_boat.png")
+              purge_glob("textures/items/dark_oak_boat.png")
+              purge_glob("textures/items/music_disc_*.png")
+              purge_glob("textures/items/wheat_seeds.png")
+              purge_glob("textures/items/melon_seeds.png")
+              purge_glob("textures/items/pumpkin_seeds.png")
+              purge_glob("textures/items/beetroot_seeds.png")
+              purge_glob("textures/items/redstone.png")
+              purge_glob("textures/items/sugar_cane.png")
+              purge_glob("textures/items/melon.png")
+              purge_glob("textures/items/totem_of_undying.png")
+              purge_glob("textures/items/splash_potion.png")
+              purge_glob("textures/items/lingering_potion.png")
+              purge_glob("textures/items/experience_bottle.png")
+
+              if fmt >= 2:
+                  # 1.9 - 1.12.2 items
+                  purge_glob("textures/items/clock.png")
+                  purge_glob("textures/items/clock.png.mcmeta")
+                  purge_glob("textures/items/compass.png")
+                  purge_glob("textures/items/compass.png.mcmeta")
+                  purge_glob("textures/items/wood_*.png")
+                  purge_glob("textures/items/door_wood.png")
+                  purge_glob("textures/items/gold_sword.png")
+                  purge_glob("textures/items/gold_axe.png")
+                  purge_glob("textures/items/gold_pickaxe.png")
+                  purge_glob("textures/items/gold_shovel.png")
+                  purge_glob("textures/items/gold_hoe.png")
+                  purge_glob("textures/items/gold_helmet.png")
+                  purge_glob("textures/items/gold_chestplate.png")
+                  purge_glob("textures/items/gold_leggings.png")
+                  purge_glob("textures/items/gold_boots.png")
+                  purge_glob("textures/items/gold_horse_armor.png")
+                  purge_glob("textures/items/apple_golden.png")
+                  purge_glob("textures/items/carrot_golden.png")
+                  purge_glob("textures/items/slimeball.png")
+                  purge_glob("textures/items/netherbrick.png")
+                  purge_glob("textures/items/melon_speckled.png")
+                  purge_glob("textures/items/fish_clownfish_raw.png")
+                  purge_glob("textures/items/fish_cod_raw.png")
+                  purge_glob("textures/items/fish_cod_cooked.png")
+                  purge_glob("textures/items/fish_salmon_raw.png")
+                  purge_glob("textures/items/fish_salmon_cooked.png")
+                  purge_glob("textures/items/fish_pufferfish_raw.png")
+                  purge_glob("textures/items/beef_raw.png")
+                  purge_glob("textures/items/beef_cooked.png")
+                  purge_glob("textures/items/chicken_raw.png")
+                  purge_glob("textures/items/chicken_cooked.png")
+                  purge_glob("textures/items/porkchop_raw.png")
+                  purge_glob("textures/items/porkchop_cooked.png")
+                  purge_glob("textures/items/mutton_raw.png")
+                  purge_glob("textures/items/mutton_cooked.png")
+                  purge_glob("textures/items/rabbit_raw.png")
+                  purge_glob("textures/items/rabbit_cooked.png")
+                  purge_glob("textures/items/potion_bottle_empty.png")
+                  purge_glob("textures/items/potion_bottle_drinkable.png")
+                  purge_glob("textures/items/potion_bottle_splash.png")
+                  purge_glob("textures/items/fireworks_charge*.png")
+                  purge_glob("textures/items/fireworks.png")
 
           # --- 1.11 - 1.12+ (Format < 3) ---
           if fmt < 3:
               purge_glob("textures/**/gui/**/shulker_box*")
+              purge_glob("textures/**/shulker_shell*")
+              purge_glob("textures/**/iron_nugget*")
+              purge_glob("textures/**/totem*")
+              purge_glob("textures/**/knowledge_book*")
 
           # --- 1.9 - 1.10+ (Format == 1 / 1.8.9 Base) ---
           if fmt == 1:
@@ -491,16 +654,25 @@ jobs:
               purge_glob("textures/**/blocks/*_trapdoor.png")
               purge_glob("textures/**/blocks/chain_command_block.png")
               purge_glob("textures/**/blocks/repeating_command_block.png")
-              # Custom boat variants (< 1.9)
-              purge_glob("textures/**/*_boat.png")
+              purge_glob("textures/items/*_boat.png")
+              purge_glob("textures/items/clock_*.png")
+              purge_glob("textures/items/compass_*.png")
+              purge_glob("textures/items/spectral_arrow*")
+              purge_glob("textures/items/dragon_breath*")
+              purge_glob("textures/items/elytra*")
+              purge_glob("textures/items/chorus_fruit*")
+              purge_glob("textures/items/popped_chorus_fruit*")
+              purge_glob("textures/items/beetroot*")
+              purge_glob("textures/items/end_crystal*")
+              purge_glob("textures/items/empty_armor_slot_shield*")
 
-              # Modern individual colored bed textures
+              # Bed textures
               bed_colors = ["black", "blue", "brown", "cyan", "gray", "green", "light_blue", 
                             "light_gray", "lime", "magenta", "orange", "pink", "purple", "white", "yellow"]
               for color in bed_colors:
                   purge_glob(f"textures/**/blocks/{color}_bed_*")
 
-              # Modern converted duplicates
+              # Modern item texture aliases in 1.8.9
               redundant_modern_1_8 = [
                   "items/beef.png", "items/cooked_beef.png", "items/chicken.png",
                   "items/cooked_chicken.png", "items/porkchop.png", "items/cooked_porkchop.png",
@@ -508,33 +680,34 @@ jobs:
                   "items/cooked_mutton.png", "items/cod.png", "items/cooked_cod.png",
                   "items/salmon.png", "items/cooked_salmon.png", "items/tropical_fish.png",
                   "items/pufferfish.png", "items/melon_slice.png", "items/glistering_melon_slice.png",
-                  "items/slime_ball.png", "items/fireworks.png", "items/firework_star*.png",
-                  "items/firework_rocket.png", "items/fireball.png", "items/music_disc_*.png",
-                  "items/nether_brick.png", "items/wooden_axe.png", "items/wooden_hoe.png",
-                  "items/wooden_pickaxe.png", "items/wooden_shovel.png", "items/wooden_sword.png",
-                  "items/golden_axe.png", "items/golden_boots.png", "items/golden_chestplate.png",
-                  "items/golden_helmet.png", "items/golden_hoe.png", "items/golden_horse_armor.png",
-                  "items/golden_leggings.png", "items/golden_pickaxe.png", "items/golden_shovel.png",
-                  "items/golden_sword.png", "items/golden_apple.png", "items/golden_carrot.png",
-                  "items/oak_door.png", "items/iron_door.png", "items/birch_door.png",
-                  "items/spruce_door.png", "items/jungle_door.png", "items/acacia_door.png",
-                  "items/dark_oak_door.png", "items/map.png", "items/filled_map*.png",
-                  "items/written_book.png", "items/writable_book.png",
-                  "blocks/carrots_stage[0-7].png",
-                  "blocks/cocoa_stage[0-7].png",
-                  "blocks/nether_wart_stage[0-7].png",
-                  "blocks/oak_planks.png", "blocks/birch_planks.png", "blocks/spruce_planks.png",
-                  "blocks/jungle_planks.png", "blocks/acacia_planks.png", "blocks/dark_oak_planks.png",
-                  "blocks/oak_log*.png", "blocks/birch_log*.png", "blocks/spruce_log*.png",
-                  "blocks/jungle_log*.png", "blocks/acacia_log*.png", "blocks/dark_oak_log*.png",
-                  "blocks/grass_block_*.png", "blocks/stone_bricks.png", "blocks/end_stone_bricks.png",
-                  "blocks/short_grass.png", "blocks/allium.png", "blocks/azure_bluet.png",
-                  "blocks/blue_orchid.png", "blocks/dandelion.png", "blocks/dead_bush.png",
-                  "blocks/fire_0.png", "blocks/fire_1.png", "blocks/furnace_front.png",
-                  "blocks/dispenser_front.png", "blocks/dropper_front.png", "blocks/attached_*_stem.png",
-                  "blocks/melon_stem.png", "blocks/pumpkin_stem.png", "blocks/nether_bricks.png",
-                  "blocks/nether_portal.png", "blocks/iron_door_*.png", "blocks/oak_door_*.png",
-                  "blocks/andesite.png", "blocks/diorite.png", "blocks/granite.png"
+                  "items/slime_ball.png", "items/firework_star*.png", "items/firework_rocket.png",
+                  "items/fireball.png", "items/nether_brick.png", "items/wooden_axe.png",
+                  "items/wooden_hoe.png", "items/wooden_pickaxe.png", "items/wooden_shovel.png",
+                  "items/wooden_sword.png", "items/wooden_armorstand.png", "items/golden_axe.png",
+                  "items/golden_boots.png", "items/golden_chestplate.png", "items/golden_helmet.png",
+                  "items/golden_hoe.png", "items/golden_horse_armor.png", "items/golden_leggings.png",
+                  "items/golden_pickaxe.png", "items/golden_shovel.png", "items/golden_sword.png",
+                  "items/golden_apple.png", "items/golden_carrot.png", "items/oak_door.png",
+                  "items/iron_door.png", "items/birch_door.png", "items/spruce_door.png",
+                  "items/jungle_door.png", "items/acacia_door.png", "items/dark_oak_door.png",
+                  "items/map.png", "items/filled_map*.png", "items/written_book.png",
+                  "items/writable_book.png", "items/enchanted_book.png", "items/potion.png",
+                  "items/bone_meal.png", "items/cocoa_beans.png", "items/lapis_lazuli.png",
+                  "items/ink_sac.png", "items/charcoal.png", "items/bucket.png", "items/water_bucket.png",
+                  "items/lava_bucket.png", "items/milk_bucket.png", "items/book.png",
+                  "blocks/carrots_stage[0-7].png", "blocks/cocoa_stage[0-7].png",
+                  "blocks/nether_wart_stage[0-7].png", "blocks/oak_planks.png", "blocks/birch_planks.png",
+                  "blocks/spruce_planks.png", "blocks/jungle_planks.png", "blocks/acacia_planks.png",
+                  "blocks/dark_oak_planks.png", "blocks/oak_log*.png", "blocks/birch_log*.png",
+                  "blocks/spruce_log*.png", "blocks/jungle_log*.png", "blocks/acacia_log*.png",
+                  "blocks/dark_oak_log*.png", "blocks/grass_block_*.png", "blocks/stone_bricks.png",
+                  "blocks/end_stone_bricks.png", "blocks/short_grass.png", "blocks/allium.png",
+                  "blocks/azure_bluet.png", "blocks/blue_orchid.png", "blocks/dandelion.png",
+                  "blocks/dead_bush.png", "blocks/fire_0.png", "blocks/fire_1.png",
+                  "blocks/furnace_front.png", "blocks/dispenser_front.png", "blocks/dropper_front.png",
+                  "blocks/attached_*_stem.png", "blocks/melon_stem.png", "blocks/pumpkin_stem.png",
+                  "blocks/nether_bricks.png", "blocks/nether_portal.png", "blocks/iron_door_*.png",
+                  "blocks/oak_door_*.png", "blocks/andesite.png", "blocks/diorite.png", "blocks/granite.png"
               ]
               for pat in redundant_modern_1_8:
                   purge_glob("textures/" + pat)
@@ -551,7 +724,6 @@ jobs:
 
           print(f"Asset pruning complete for Format {fmt}.")
           EOF
-
 
       - name: Inject Legacy mcmeta (Formats 1-15)
         if: '!matrix.is_modern'
@@ -571,8 +743,6 @@ jobs:
           packsquash_version: v0.4.1
           action_cache_revision: "local-${{ github.run_id }}-${{ matrix.filename }}"
           options: |
-            # Global Options (These apply to the whole pack)
-
             pack_directory = 'build_dir'
             output_file_path = 'Klassic Orange PvP-${{ matrix.filename }}.zip'
             allow_mods = ['OptiFine']
@@ -581,8 +751,6 @@ jobs:
             zip_compression_iterations = 255
             zip_spec_conformance_level = 'pedantic'
             recompress_compressed_files = true
-
-            # Per-file Options (These apply ONLY to PNG files)
 
             ['**/*.png']
             image_data_compression_iterations = 255
