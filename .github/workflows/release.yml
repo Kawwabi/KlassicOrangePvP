@@ -421,6 +421,27 @@ jobs:
               purge_glob("textures/**/netherite_*")
               purge_glob("textures/**/piglin_banner_pattern*")
 
+          # --- 1.15+ JAPPA RETEXTURES (Format >= 5) ---
+          if fmt >= 5:
+              purge_glob("textures/particle/particles.png")
+              purge_glob("textures/**/cod_bucket.png")
+              purge_glob("textures/**/salmon_bucket.png")
+              purge_glob("textures/**/pufferfish_bucket.png")
+              purge_glob("textures/**/tropical_fish_bucket.png")
+              purge_glob("textures/**/beetroot_seeds.png")
+              purge_glob("textures/**/seeds_beetroot.png")
+              purge_glob("textures/**/poisonous_potato.png")
+              purge_glob("textures/**/potato_poisonous.png")
+              purge_glob("textures/**/pumpkin_face_off.png")
+              purge_glob("textures/**/pumpkin_face_on.png")
+              purge_glob("textures/**/pumpkin_side.png")
+              purge_glob("textures/**/pumpkin_top.png")
+              purge_glob("textures/**/carved_pumpkin.png")
+              purge_glob("textures/**/jack_o_lantern.png")
+              purge_glob("textures/**/sponge.png")
+              purge_glob("textures/**/sponge_wet.png")
+              purge_glob("textures/**/wet_sponge.png")
+
           # --- 1.15 - 1.16+ (Format < 5) ---
           if fmt < 5:
               purge_glob("**/ctm/**/beehive*")
@@ -447,6 +468,9 @@ jobs:
 
           # --- 1.14+ (Format < 4) ---
           if fmt < 4:
+              purge_glob("textures/particle/damage.png")
+              purge_glob("textures/particle/heart.png")
+              purge_glob("textures/entity/fishing_hook.png")
               purge_glob("textures/items/structure_void*")
               purge_glob("**/ctm/**/cartography_table*")
               purge_glob("**/ctm/**/loom*")
@@ -504,7 +528,9 @@ jobs:
 
           # --- 1.13+ FLATTENING SEPARATION (Format >= 4 vs Legacy Formats 1, 2, 3) ---
           if fmt >= 4:
-              purge_glob("textures/item/bow_standby.png")
+              purge_glob("textures/item/potato_poisonous.png")
+              purge_glob("textures/item/sponge_wet.png")
+              purge_glob("textures/item/fishing_rod_uncast.png")
               purge_glob("textures/item/minecart_normal.png")
               purge_glob("textures/item/minecart_*.png")
               purge_glob("textures/item/door_*.png")
@@ -550,7 +576,13 @@ jobs:
               purge_glob("textures/item/apple_golden.png")
           else:
               # Purge modern-only names in legacy packs (Formats 1, 2, 3)
-              purge_glob("textures/items/bow.png")
+              purge_glob("textures/items/map.png")
+              purge_glob("textures/items/filled_map.png")
+              purge_glob("textures/items/filled_map_markings.png")
+              purge_glob("textures/items/poisonous_potato.png")
+              purge_glob("textures/items/glass_bottle.png")
+              purge_glob("textures/items/wet_sponge.png")
+              purge_glob("textures/items/fishing_rod.png")
               purge_glob("textures/items/minecart.png")
               purge_glob("textures/items/chest_minecart.png")
               purge_glob("textures/items/furnace_minecart.png")
@@ -574,7 +606,6 @@ jobs:
               purge_glob("textures/items/wheat_seeds.png")
               purge_glob("textures/items/melon_seeds.png")
               purge_glob("textures/items/pumpkin_seeds.png")
-              purge_glob("textures/items/beetroot_seeds.png")
               purge_glob("textures/items/redstone.png")
               purge_glob("textures/items/sugar_cane.png")
               purge_glob("textures/items/melon.png")
