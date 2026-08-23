@@ -303,7 +303,7 @@ else:
         "comparator.png", "furnace_front.png", "grass_block_*.png", "terracotta.png", "*_terracotta.png", "dark_prismarine.png", "prismarine.png",
         "oak_leaves.png", "spruce_leaves.png", "birch_leaves.png", "jungle_leaves.png",
         "acacia_leaves.png", "dark_oak_leaves.png", "slime_block.png", "redstone_lamp.png", "piston_top.png",
-        "anvil.png", "anvil_top.png", "chipped_anvil_top.png", "damaged_anvil_top.png",
+        "anvil.png", "anvil_top.png", "chipped_anvil_top.png", "damaged_anvil_top.png", "anvil_top_damaged.png",
         "cobweb.png", "wheat_stage[0-7].png", "smooth_stone_slab_*.png",
         "stone_bricks.png", "mossy_stone_bricks.png", "cracked_stone_bricks.png", "chiseled_stone_bricks.png",
         "mossy_cobblestone.png", "*_sapling.png", "redstone_torch.png", "unlit_redstone_torch.png",
@@ -398,19 +398,6 @@ else:
     purge_glob("textures/items/acacia_door.png")
     purge_glob("textures/items/dark_oak_door.png")
     purge_glob("textures/items/iron_door.png")
-    purge_glob("textures/items/oak_boat.png")
-    purge_glob("textures/items/spruce_boat.png")
-    purge_glob("textures/items/birch_boat.png")
-    purge_glob("textures/items/jungle_boat.png")
-    purge_glob("textures/items/acacia_boat.png")
-    purge_glob("textures/items/dark_oak_boat.png")
-
-    # Clock & Compass handling
-    if fmt >= 2:
-        purge_glob("textures/items/clock.png")
-        purge_glob("textures/items/clock.png.mcmeta")
-        purge_glob("textures/items/compass.png")
-        purge_glob("textures/items/compass.png.mcmeta")
 
 # --- COLORED BEDS UNDER 1.12 ---
 if fmt < 3:
@@ -424,6 +411,13 @@ if fmt < 3:
     purge_glob("textures/**/iron_nugget*")
     purge_glob("textures/**/totem*")
     purge_glob("textures/**/knowledge_book*")
+
+# --- CLOCK & COMPASS HANDLING ---
+if fmt >= 2:
+    purge_glob("textures/items/clock.png")
+    purge_glob("textures/items/clock.png.mcmeta")
+    purge_glob("textures/items/compass.png")
+    purge_glob("textures/items/compass.png.mcmeta")
 
     # --- RED NETHER BRICKS (< 1.10) ---
 if fmt < 2:
