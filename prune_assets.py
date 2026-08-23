@@ -43,19 +43,9 @@ else:
 if fmt < 88:
     purge_glob("**/ctm/**/crafter*")
     purge_glob("**/ctm/**/polished_tuff*")
-    purge_glob("**/ctm/**/copper/grate*")
-    purge_glob("**/ctm/**/copper/chiseled*")
-    purge_glob("textures/**/gui/**/crafter*")
     purge_glob("textures/**/copper_axe*")
     purge_glob("textures/**/copper_hoe*")
-    purge_glob("textures/**/copper_pickaxe*")
-    purge_glob("textures/**/copper_shovel*")
     purge_glob("textures/**/copper_sword*")
-    purge_glob("textures/**/copper_helmet*")
-    purge_glob("textures/**/copper_chestplate*")
-    purge_glob("textures/**/copper_leggings*")
-    purge_glob("textures/**/copper_boots*")
-    purge_glob("textures/**/mace*")
     purge_glob("textures/**/flow_banner_pattern*")
     purge_glob("textures/**/guster_banner_pattern*")
 
@@ -65,7 +55,7 @@ if fmt < 9:
     purge_glob("**/ctm/**/reinforced_deepslate*")
 
 # --- COLORED SIGNS (< 1.14 & >= 1.18) ---
-if fmt <= 4 or fmt >= 8:
+if fmt < 4 or fmt >= 8:
     purge_glob("textures/**/spruce_sign*")
     purge_glob("textures/**/birch_sign*")
     purge_glob("textures/**/jungle_sign*")
@@ -103,9 +93,14 @@ if fmt >= 5:
     for color in bed_colors:
         purge_glob(f"textures/**/{color}_bed_*.png")
 
-# --- BONE BLOCKS (< 1.10 and >= 1.15) ---
+# --- PURPUR BLOCKS AND BONES (< 1.9 and >= 1.15) ---
 if fmt < 2 or fmt >= 5:
+    purge_glob("textures/**/purpur_*.png")
+    purge_glob("**/ctm/**/purpur*")
+    purge_glob("models/block/purpur_pillar*.json")
+    purge_glob("blockstates/purpur_pillar.json")
     purge_glob("textures/**/bone_block*.png")
+    purge_glob("**/ctm/**/bone*")
 
 # --- 1.15 - 1.16+ (Format < 5) ---
 if fmt < 5:
@@ -143,7 +138,6 @@ if fmt < 4:
     purge_glob("textures/items/structure_void*")
     purge_glob("**/ctm/**/cartography_table*")
     purge_glob("**/ctm/**/loom*")
-    purge_glob("textures/**/blocks/blue_ice.png")
     purge_glob("textures/**/blocks/cornflower.png")
     purge_glob("textures/**/blocks/kelp*.png")
     purge_glob("textures/**/blocks/lectern_*.png")
@@ -192,29 +186,34 @@ if fmt < 4:
 # --- 1.13+ FLATTENING SEPARATION (Format >= 4 vs Legacy Formats 1, 2, 3) ---
 if fmt >= 4:
     legacy_blocks = [
-        "brick.png", "potatoes_stage_*.png", "carrots_stage_*.png", "nether_wart_stage_*.png",
+        "brick.png", "potatoes_stage_*.png", "carrots_stage_*.png", "carrot_stage_*.png", "nether_wart_stage_*.png", "cocoa_stage_*.png",
         "endframe_*.png", "farmland_dry.png", "farmland_wet.png", "flower_allium.png",
         "flower_blue_orchid.png", "flower_dandelion.png", "flower_houstonia.png",
-        "flower_oxeye_daisy.png", "flower_paeonia.png", "flower_rose.png", "flower_tulip_*.png",
+        "flower_oxeye_daisy.png", "flower_paeonia.png", "flower_rose.png", "flower_tulip_*.png", "flower_pot.png",
         "rail_normal.png", "rail_normal_turned.png", "rail_golden.png", "rail_golden_powered.png",
         "rail_detector.png", "rail_detector_powered.png", "rail_activator.png", "rail_activator_powered.png",
-        "sandstone_normal.png", "wool_colored_*.png", "melon_stem_disconnected.png", "melon_stem_connected.png",
-        "pumpkin_stem_disconnected.png", "pumpkin_stem_connected.png", "mushroom_red.png", "mushroom_brown.png",
+        "sandstone_normal.png", "sandstone_carved.png", "sandstone_smooth.png",
+        "red_sandstone_normal.png", "red_sandstone_carved.png", "red_sandstone_smooth.png",
+        "wool_colored_*.png", "melon_stem_disconnected.png", "melon_stem_connected.png",
+        "pumpkin_stem_disconnected.png", "pumpkin_stem_connected.png", "mushroom_red.png", "mushroom_brown.png", "mushroom_block_skin_*.png",
         "nether_brick.png", "door_wood_*.png", "door_iron_*.png", "door_spruce_*.png", "door_birch_*.png",
         "door_jungle_*.png", "door_acacia_*.png", "door_dark_oak_*.png", "glass_black.png", "glass_red.png",
         "glass_green.png", "glass_brown.png", "glass_blue.png", "glass_purple.png", "glass_cyan.png",
         "glass_silver.png", "glass_gray.png", "glass_pink.png", "glass_lime.png", "glass_yellow.png",
         "glass_light_blue.png", "glass_magenta.png", "glass_orange.png", "glass_white.png", "glass_pane_top_*.png",
         "comparator_off.png", "furnace_front_off.png", "grass_side.png", "grass_top.png", "grass_side_snowed.png",
-        "hardened_clay_stained_*.png", "prismarine_dark.png", "prismarine_rough.png", "leaves_oak.png",
+        "hardened_clay.png", "hardened_clay_stained_*.png", "prismarine_dark.png", "prismarine_rough.png", "leaves_oak.png",
         "leaves_oak_opaque.png", "leaves_spruce.png", "leaves_spruce_opaque.png", "leaves_birch.png",
         "leaves_birch_opaque.png", "leaves_jungle.png", "leaves_jungle_opaque.png", "leaves_acacia.png",
         "leaves_acacia_opaque.png", "leaves_big_oak.png", "leaves_big_oak_opaque.png", "slime.png",
-        "redstone_lamp_off.png", "piston_top_normal.png", "anvil_top_damaged_1.png", "anvil_top_damaged_2.png",
+        "redstone_lamp_off.png", "piston_top_normal.png", "anvil_base.png", "anvil_top_damaged_0.png", "anvil_top_damaged_1.png", "anvil_top_damaged_2.png",
         "web.png", "wheat_stage_*.png", "stone_slab_top.png", "stone_slab_side.png",
         "stonebrick.png", "stonebrick_mossy.png", "stonebrick_cracked.png", "stonebrick_carved.png",
         "cobblestone_mossy.png", "sapling_*.png", "redstone_torch_on.png", "redstone_torch_off.png",
-        "stone_andesite*.png", "stone_diorite*.png", "stone_granite*.png"
+        "stone_andesite*.png", "stone_diorite*.png", "stone_granite*.png",
+        "log_oak*.png", "log_spruce*.png", "log_birch*.png", "log_jungle*.png", "log_acacia*.png", "log_big_oak*.png", "log_dark_oak*.png",
+        "planks_*.png", "tallgrass.png", "double_plant_*.png", "trip_wire.png", "trip_wire_source.png", "deadbush.png", "trapdoor.png",
+        "torch_on.png", "item_frame.png", "reeds.png"
     ]
     for lb in legacy_blocks:
         purge_glob("textures/blocks/" + lb)
@@ -289,22 +288,28 @@ if fmt >= 4:
     purge_glob("textures/item/totem.png")
 else:
     modern_blocks = [
-        "bricks.png", "potatoes_stage[0-9].png", "carrots_stage[0-9].png", "nether_wart_stage[0-9].png",
+        "bricks.png", "potatoes_stage[0-9].png", "carrots_stage[0-9].png", "nether_wart_stage[0-9].png", "cocoa_stage[0-9].png",
         "end_portal_frame_*.png", "farmland.png", "farmland_moist.png", "allium.png", "blue_orchid.png",
-        "dandelion.png", "azure_bluet.png", "oxeye_daisy.png", "peony_*.png", "poppy.png", "*_tulip.png",
+        "dandelion.png", "azure_bluet.png", "oxeye_daisy.png", "peony_*.png", "poppy.png", "*_tulip.png", "potted_*.png",
         "rail.png", "powered_rail.png", "powered_rail_on.png", "detector_rail.png", "detector_rail_on.png",
-        "activator_rail.png", "activator_rail_on.png", "sandstone.png", "*_wool.png", "attached_melon_stem.png",
-        "attached_pumpkin_stem.png", "red_mushroom_block.png", "brown_mushroom_block.png", "nether_bricks.png",
+        "activator_rail.png", "activator_rail_on.png", "sandstone.png", "chiseled_sandstone.png", "cut_sandstone.png",
+        "red_sandstone.png", "chiseled_red_sandstone.png", "cut_red_sandstone.png",
+        "*_wool.png", "melon_stem.png", "attached_melon_stem.png",
+        "pumpkin_stem.png", "attached_pumpkin_stem.png", "red_mushroom_block.png", "brown_mushroom_block.png", "mushroom_stem.png", "nether_bricks.png",
         "oak_door_*.png", "iron_door_*.png", "spruce_door_*.png", "birch_door_*.png", "jungle_door_*.png",
         "acacia_door_*.png", "dark_oak_door_*.png", "*_stained_glass.png", "*_stained_glass_pane*.png",
-        "comparator.png", "furnace_front.png", "grass_block_*.png", "*_terracotta.png", "dark_prismarine.png",
+        "comparator.png", "furnace_front.png", "grass_block_*.png", "terracotta.png", "*_terracotta.png", "dark_prismarine.png", "prismarine_bricks.png",
         "oak_leaves.png", "spruce_leaves.png", "birch_leaves.png", "jungle_leaves.png",
         "acacia_leaves.png", "dark_oak_leaves.png", "slime_block.png", "redstone_lamp.png", "piston_top.png",
-        "chipped_anvil_top.png", "damaged_anvil_top.png",
+        "anvil.png", "anvil_top.png", "chipped_anvil_top.png", "damaged_anvil_top.png",
         "cobweb.png", "wheat_stage[0-7].png", "smooth_stone_slab_*.png",
         "stone_bricks.png", "mossy_stone_bricks.png", "cracked_stone_bricks.png", "chiseled_stone_bricks.png",
         "mossy_cobblestone.png", "*_sapling.png", "redstone_torch.png", "unlit_redstone_torch.png",
-        "andesite.png", "diorite.png", "granite.png", "polished_andesite.png", "polished_diorite.png", "polished_granite.png"
+        "andesite.png", "diorite.png", "granite.png", "polished_andesite.png", "polished_diorite.png", "polished_granite.png",
+        "oak_log*.png", "spruce_log*.png", "birch_log*.png", "jungle_log*.png", "acacia_log*.png", "dark_oak_log*.png",
+        "*_planks.png", "tall_grass*.png", "large_fern_*.png", "lilac_*.png", "peony_*.png", "rose_bush_*.png", "sunflower_*.png",
+        "tripwire.png", "tripwire_hook.png", "dead_bush.png", "oak_trapdoor.png", "torch.png", "itemframe_background.png",
+        "sugar_cane.png"
     ]
     for mb in modern_blocks:
         purge_glob("textures/blocks/" + mb)
@@ -419,18 +424,17 @@ if fmt < 3:
     purge_glob("textures/**/totem*")
     purge_glob("textures/**/knowledge_book*")
 
+    # --- RED NETHER BRICKS (< 1.10) ---
+if fmt < 2:
+    purge_glob("textures/**/red_nether_bricks.png")
+
 # --- 1.9 - 1.10+ (Format == 1 / 1.8.9 Base) ---
 if fmt == 1:
     purge_glob("models/block/*command_block*.json")
     purge_glob("models/item/*command_block*.json")
     purge_glob("blockstates/*command_block*.json")
-    purge_glob("**/ctm/**/bone*")
-    purge_glob("**/ctm/**/purpur*")
-    purge_glob("blockstates/purpur_pillar.json")
-    purge_glob("models/block/purpur_pillar*.json")
     purge_glob("textures/**/blocks/magma.png")
     purge_glob("textures/**/blocks/nether_wart_block.png")
-    purge_glob("textures/**/blocks/bone_block_*.png")
     purge_glob("textures/**/blocks/beetroots_stage*.png")
     purge_glob("textures/**/blocks/chorus_*.png")
     purge_glob("textures/**/blocks/end_rod.png")
@@ -439,7 +443,6 @@ if fmt == 1:
     purge_glob("textures/**/blocks/*_trapdoor.png")
     purge_glob("textures/**/blocks/chain_command_block.*")
     purge_glob("textures/**/blocks/repeating_command_block.*")
-    purge_glob("textures/**/blocks/red_nether_bricks.png")
     purge_glob("textures/items/*_boat.png")
     purge_glob("textures/items/clock_*.png")
     purge_glob("textures/items/compass_*.png")
