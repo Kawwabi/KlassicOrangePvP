@@ -226,6 +226,19 @@ jobs:
             fi
           fi
 
+          # CTM Overrides for 1.11+ (Format 3+)
+          if [ "${{ matrix.format }}" -ge 3 ]; then
+            if [ -d "modern_override/assets/minecraft/optifine/ctm" ]; then
+              # 1. Delete any existing base CTM folders completely
+              rm -rf build_dir/assets/minecraft/mcpatcher/ctm 2>/dev/null || true
+              rm -rf build_dir/assets/minecraft/optifine/ctm 2>/dev/null || true
+              
+              # 2. Add the modern_override CTM folder as a fresh replacement
+              mkdir -p build_dir/assets/minecraft/optifine
+              cp -r modern_override/assets/minecraft/optifine/ctm build_dir/assets/minecraft/optifine/ 2>/dev/null || true
+            fi
+          fi
+
           # Bed Models (Format 2 Only)
           if [ "${{ matrix.format }}" -eq 2 ]; then
             mkdir -p build_dir/assets/minecraft/models/item build_dir/assets/minecraft/models/block
