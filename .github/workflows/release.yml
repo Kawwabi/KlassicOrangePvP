@@ -199,6 +199,25 @@ jobs:
           fi
           rm -f "$CREATIVE_GUI/tabsfor1.19.3+.png" 2>/dev/null || true
 
+          # GUI Container Overrides for 1.9 - 1.12.2 (Formats 2 & 3)
+          if [ "${{ matrix.format }}" -ge 2 ] && [ "${{ matrix.format }}" -lt 4 ]; then
+            GUI_CONT="build_dir/assets/minecraft/textures/gui/container"
+            MOD_CONT="modern_override/assets/minecraft/textures/gui/container"
+            mkdir -p "$GUI_CONT/creative_inventory"
+            
+            # 1.9+ (Format 2+): Offhand slots & Blaze Powder fuel
+            cp -f "$MOD_CONT/inventory.png" "$GUI_CONT/" 2>/dev/null || true
+            cp -f "$MOD_CONT/brewing_stand.png" "$GUI_CONT/" 2>/dev/null || true
+            cp -f "$MOD_CONT/creative_inventory/tab_inventory.png" "$GUI_CONT/creative_inventory/" 2>/dev/null || true
+            
+            # 1.11+ & 1.12+ (Format 3): Llama UI, Recipe Book, Shulker Boxes
+            if [ "${{ matrix.format }}" -eq 3 ]; then
+              cp -f "$MOD_CONT/shulker_box.png" "$GUI_CONT/" 2>/dev/null || true
+              cp -f "$MOD_CONT/horse.png" "$GUI_CONT/" 2>/dev/null || true
+              cp -f "$MOD_CONT/crafting_table.png" "$GUI_CONT/" 2>/dev/null || true
+            fi
+          fi
+
           # Spawn Eggs for 1.9 to 1.12.2 (Formats 2 & 3)
           if [ "${{ matrix.format }}" -ge 2 ] && [ "${{ matrix.format }}" -lt 4 ]; then
             if [ -d "modern_override/assets/minecraft/optifine/cit/spawn_egg" ]; then
@@ -414,7 +433,6 @@ jobs:
               purge_glob("**/ctm/**/glass/tinted_glass*")
               purge_glob("**/ctm/**/metals_and_gems/ore/copper_ore*")
               purge_glob("**/ctm/**/metals_and_gems/ore/deepslate_*")
-              purge_glob("textures/**/axolotl_bucket*")
 
           # --- 1.16+ (Format < 6) ---
           if fmt < 6:
