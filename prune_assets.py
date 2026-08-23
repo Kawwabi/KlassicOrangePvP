@@ -43,6 +43,9 @@ else:
 if fmt < 88:
     purge_glob("**/ctm/**/crafter*")
     purge_glob("**/ctm/**/polished_tuff*")
+    purge_glob("**/ctm/**/copper/grate*")
+    purge_glob("**/ctm/**/copper/chiseled*")
+    purge_glob("textures/**/gui/**/crafter*")
     purge_glob("textures/**/copper_axe*")
     purge_glob("textures/**/copper_hoe*")
     purge_glob("textures/**/copper_sword*")
@@ -206,14 +209,14 @@ if fmt >= 4:
         "leaves_oak_opaque.png", "leaves_spruce.png", "leaves_spruce_opaque.png", "leaves_birch.png",
         "leaves_birch_opaque.png", "leaves_jungle.png", "leaves_jungle_opaque.png", "leaves_acacia.png",
         "leaves_acacia_opaque.png", "leaves_big_oak.png", "leaves_big_oak_opaque.png", "slime.png",
-        "redstone_lamp_off.png", "piston_top_normal.png", "anvil_base.png", "anvil_top_damaged_0.png", "anvil_top_damaged_1.png", "anvil_top_damaged_2.png",
+        "redstone_lamp_off.png", "piston_top_normal.png", "anvil_base.png", "anvil_top_damaged.png", "anvil_top_damaged_0.png", "anvil_top_damaged_1.png", "anvil_top_damaged_2.png",
         "web.png", "wheat_stage_*.png", "stone_slab_top.png", "stone_slab_side.png",
         "stonebrick.png", "stonebrick_mossy.png", "stonebrick_cracked.png", "stonebrick_carved.png",
         "cobblestone_mossy.png", "sapling_*.png", "redstone_torch_on.png", "redstone_torch_off.png",
         "stone_andesite*.png", "stone_diorite*.png", "stone_granite*.png",
         "log_oak*.png", "log_spruce*.png", "log_birch*.png", "log_jungle*.png", "log_acacia*.png", "log_big_oak*.png", "log_dark_oak*.png",
         "planks_*.png", "tallgrass.png", "double_plant_*.png", "trip_wire.png", "trip_wire_source.png", "deadbush.png", "trapdoor.png",
-        "torch_on.png", "item_frame.png", "reeds.png"
+        "torch_on.png", "item_frame.png", "reeds.png", "sponge_wet.png"
     ]
     for lb in legacy_blocks:
         purge_glob("textures/blocks/" + lb)
@@ -222,7 +225,6 @@ if fmt >= 4:
     purge_glob("textures/item/potato_baked.png")
     purge_glob("textures/**/pumpkin_face_off.png")
     purge_glob("textures/**/pumpkin_face_on.png")
-    purge_glob("textures/item/sponge_wet.png")
     purge_glob("textures/item/fishing_rod_uncast.png")
     purge_glob("textures/item/fireball.png")
     purge_glob("textures/item/fireworks.png")
@@ -298,7 +300,7 @@ else:
         "pumpkin_stem.png", "attached_pumpkin_stem.png", "red_mushroom_block.png", "brown_mushroom_block.png", "mushroom_stem.png", "nether_bricks.png",
         "oak_door_*.png", "iron_door_*.png", "spruce_door_*.png", "birch_door_*.png", "jungle_door_*.png",
         "acacia_door_*.png", "dark_oak_door_*.png", "*_stained_glass.png", "*_stained_glass_pane*.png",
-        "comparator.png", "furnace_front.png", "grass_block_*.png", "terracotta.png", "*_terracotta.png", "dark_prismarine.png", "prismarine_bricks.png",
+        "comparator.png", "furnace_front.png", "grass_block_*.png", "terracotta.png", "*_terracotta.png", "dark_prismarine.png", "prismarine.png",
         "oak_leaves.png", "spruce_leaves.png", "birch_leaves.png", "jungle_leaves.png",
         "acacia_leaves.png", "dark_oak_leaves.png", "slime_block.png", "redstone_lamp.png", "piston_top.png",
         "anvil.png", "anvil_top.png", "chipped_anvil_top.png", "damaged_anvil_top.png",
@@ -309,7 +311,7 @@ else:
         "oak_log*.png", "spruce_log*.png", "birch_log*.png", "jungle_log*.png", "acacia_log*.png", "dark_oak_log*.png",
         "*_planks.png", "tall_grass*.png", "large_fern_*.png", "lilac_*.png", "peony_*.png", "rose_bush_*.png", "sunflower_*.png",
         "tripwire.png", "tripwire_hook.png", "dead_bush.png", "oak_trapdoor.png", "torch.png", "itemframe_background.png",
-        "sugar_cane.png"
+        "sugar_cane.png", "wet_sponge.png"
     ]
     for mb in modern_blocks:
         purge_glob("textures/blocks/" + mb)
@@ -322,7 +324,6 @@ else:
     purge_glob("textures/items/baked_potato.png")
     purge_glob("textures/**/carved_pumpkin.png")
     purge_glob("textures/**/jack_o_lantern.png")
-    purge_glob("textures/items/wet_sponge.png")
     purge_glob("textures/items/fishing_rod.png")
     purge_glob("textures/items/fire_charge.png")
     purge_glob("textures/items/firework_rocket.png")
