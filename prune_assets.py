@@ -96,14 +96,10 @@ if fmt >= 5:
     for color in bed_colors:
         purge_glob(f"textures/**/{color}_bed_*.png")
 
-# --- PURPUR BLOCKS AND BONES (< 1.9 and >= 1.15) ---
-if fmt < 2 or fmt >= 5:
-    purge_glob("textures/**/purpur_*.png")
-    purge_glob("**/ctm/**/purpur*")
-    purge_glob("models/block/purpur_pillar*.json")
-    purge_glob("blockstates/purpur_pillar.json")
+# --- BONE BLOCKS (<= 1.9 and >= 1.15) ---
+if fmt <= 1 or fmt >= 5:
     purge_glob("textures/**/bone_block*.png")
-    purge_glob("**/ctm/**/bone*")
+
 
 # --- 1.15 - 1.16+ (Format < 5) ---
 if fmt < 5:
@@ -412,6 +408,10 @@ if fmt < 3:
     purge_glob("textures/**/totem*")
     purge_glob("textures/**/knowledge_book*")
 
+    # --- RED NETHER BRICKS (< 1.10) ---
+if fmt <= 2:
+    purge_glob("textures/**/red_nether_bricks.png")
+
 # --- CLOCK & COMPASS HANDLING ---
 if fmt >= 2:
     purge_glob("textures/items/clock.png")
@@ -419,12 +419,16 @@ if fmt >= 2:
     purge_glob("textures/items/compass.png")
     purge_glob("textures/items/compass.png.mcmeta")
 
-    # --- RED NETHER BRICKS (< 1.10) ---
+# --- PURPUR BLOCKS (< 1.9) ---
 if fmt < 2:
-    purge_glob("textures/**/red_nether_bricks.png")
+    purge_glob("textures/**/purpur_*.png")
+    purge_glob("**/ctm/**/purpur*")
+    purge_glob("models/block/purpur_pillar*.json")
+    purge_glob("blockstates/purpur_pillar.json")
 
 # --- 1.9 - 1.10+ (Format == 1 / 1.8.9 Base) ---
 if fmt == 1:
+    purge_glob("**/ctm/**/bone*")
     purge_glob("models/block/*command_block*.json")
     purge_glob("models/item/*command_block*.json")
     purge_glob("blockstates/*command_block*.json")
