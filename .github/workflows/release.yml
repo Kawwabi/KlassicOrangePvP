@@ -239,6 +239,21 @@ jobs:
             fi
           fi
 
+          # CTM Metals and Gems Override for 1.13+ (Format 4+)
+          if [ "${{ matrix.format }}" -ge 4 ]; then
+            if [ -d "modern_override/assets/minecraft/optifine/ctm/default/metals_and_gems" ]; then
+              # 1. Delete the old individual ore/block folders completely
+              for target_folder in coal_ore diamond_block diamond_ore emerald_block emerald_ore gold_block gold_ore iron_block iron_ore lapis_block lapis_ore nether_quartz_ore redstone_block redstone_ore; do
+                rm -rf "build_dir/assets/minecraft/mcpatcher/ctm/default/$target_folder" 2>/dev/null || true
+                rm -rf "build_dir/assets/minecraft/optifine/ctm/default/$target_folder" 2>/dev/null || true
+              done
+              
+              # 2. Add the modern_override metals_and_gems folder
+              mkdir -p build_dir/assets/minecraft/optifine/ctm/default
+              cp -r modern_override/assets/minecraft/optifine/ctm/default/metals_and_gems build_dir/assets/minecraft/optifine/ctm/default/ 2>/dev/null || true
+            fi
+          fi
+
           # Bed Models (Format 2 Only)
           if [ "${{ matrix.format }}" -eq 2 ]; then
             mkdir -p build_dir/assets/minecraft/models/item build_dir/assets/minecraft/models/block
