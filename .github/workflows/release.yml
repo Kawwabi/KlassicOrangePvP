@@ -307,11 +307,11 @@ jobs:
             rm -f build_dir/assets/minecraft/lang/*.lang 2>/dev/null || true
           fi
 
-          # Mojang Splash Screen (Format 6+)
+          # Mojang Splash Screen (Introduced in 1.13 / Format 4)
           TITLE_GUI="build_dir/assets/minecraft/textures/gui/title"
           if [ "${{ matrix.format }}" -ge 6 ]; then
             rm -f "$TITLE_GUI/mojang.png" 2>/dev/null || true
-          else
+          elif [ "${{ matrix.format }}" -ge 4 ]; then
             rm -f "$TITLE_GUI/mojangstudios.png" 2>/dev/null || true
           fi
 
@@ -324,6 +324,7 @@ jobs:
 
           # --- 3. ERA MCPATCHER / OPTIFINE FOLDER FIXES ---
           if [ "${{ matrix.format }}" -lt 4 ]; then
+            # For 1.8.9 - 1.12.2: Ensure everything is in 'mcpatcher'
             if [ -d "build_dir/assets/minecraft/optifine" ]; then
               mkdir -p build_dir/assets/minecraft/mcpatcher
               cp -rn build_dir/assets/minecraft/optifine/. build_dir/assets/minecraft/mcpatcher/ 2>/dev/null || true
@@ -346,14 +347,15 @@ jobs:
               rm -rf build_dir/assets/minecraft/textures/block
             fi
           else
+            # For 1.13+ (Format 4+): Ensure everything is in 'optifine'
             if [ -d "build_dir/assets/minecraft/mcpatcher" ]; then
               mkdir -p build_dir/assets/minecraft/optifine
               cp -rn build_dir/assets/minecraft/mcpatcher/. build_dir/assets/minecraft/optifine/ 2>/dev/null || true
               rm -rf build_dir/assets/minecraft/mcpatcher
             fi
 
-            if [ -d "build_dir/assets/minecraft/optifine/sky" ]; then
-              find build_dir/assets/minecraft/optifine/sky/ -type f -name "*.properties" -exec sed -i 's/mcpatcher\/sky/optifine\/sky/g' {} + 2>/dev/null || true
+            if [ -d "build_dir/assets/minecraft/optifine" ]; then
+              find build_dir/assets/minecraft/optifine/ -type f -name "*.properties" -exec sed -i 's/mcpatcher\//optifine\//g' {} + 2>/dev/null || true
             fi
 
             find build_dir/assets/minecraft/models/item/ -type f -name "*bed*.json" -delete 2>/dev/null || true
