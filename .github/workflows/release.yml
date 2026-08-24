@@ -332,14 +332,14 @@ jobs:
             rm -f build_dir/assets/minecraft/lang/*.lang 2>/dev/null || true
           fi
 
-          # Clean up slab and pressure plate files for versions above 1.14 (Format 5+)
-          if [ "${{ matrix.format }}" -ge 5 ]; then
+          # Clean up slab and pressure plate files for versions 1.13 and above (Format 4+)
+          if [ "${{ matrix.format }}" -ge 4 ]; then
             find build_dir/assets/minecraft/blockstates/ -type f \( -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
             find build_dir/assets/minecraft/models/block/ -type f \( -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
             find build_dir/assets/minecraft/models/item/ -type f \( -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
           fi
 
-          # --- 3. ERA MCPATCHER / OPTIFINE FOLDER FIXES ---
+          # --- 2. ERA MCPATCHER / OPTIFINE FOLDER FIXES ---
           if [ "${{ matrix.format }}" -lt 4 ]; then
             # For 1.8.9 - 1.12.2: Ensure everything is in 'mcpatcher'
             if [ -d "build_dir/assets/minecraft/optifine" ]; then
