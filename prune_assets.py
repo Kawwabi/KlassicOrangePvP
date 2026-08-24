@@ -412,7 +412,23 @@ if fmt < 3:
     purge_glob("textures/**/totem*")
     purge_glob("textures/**/knowledge_book*")
 
-    # --- RED NETHER BRICKS (< 1.10) ---
+# --- OBSERVERS ---
+# Pruned completely on 1.10 & under (<= 2) and 1.16+ (>= 6)
+if fmt <= 2 or fmt >= 6:
+    purge_glob("textures/**/observer*.png")
+    purge_glob("**/ctm/**/observer*")
+    purge_glob("models/block/observer*.json")
+    purge_glob("models/item/observer*.json")
+    purge_glob("blockstates/observer*.json")
+else:
+    # 1.11 and 1.12 (Format < 4): keep lit, prune on
+    if fmt < 4:
+        purge_glob("textures/**/observer_back_on.png")
+    # 1.13 to 1.15 (Format >= 4): keep on, prune lit
+    else:
+        purge_glob("textures/**/observer_back_lit.png")
+
+# --- RED NETHER BRICKS (< 1.10) ---
 if fmt <= 2:
     purge_glob("textures/**/red_nether_bricks.png")
 
