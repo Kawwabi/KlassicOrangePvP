@@ -226,16 +226,16 @@ jobs:
             fi
           fi
 
-          # CTM Overrides for 1.11+ (Format 3+)
+          # CTM Bone Ends Override for 1.11+ (Format 3+)
           if [ "${{ matrix.format }}" -ge 3 ]; then
-            if [ -d "modern_override/assets/minecraft/optifine/ctm" ]; then
-              # 1. Delete any existing base CTM folders completely
-              rm -rf build_dir/assets/minecraft/mcpatcher/ctm 2>/dev/null || true
-              rm -rf build_dir/assets/minecraft/optifine/ctm 2>/dev/null || true
+            if [ -d "modern_override/assets/minecraft/optifine/ctm/bone_ends" ]; then
+              # 1. Delete any existing base bone_ends folders completely
+              rm -rf build_dir/assets/minecraft/mcpatcher/ctm/bone_ends 2>/dev/null || true
+              rm -rf build_dir/assets/minecraft/optifine/ctm/bone_ends 2>/dev/null || true
               
-              # 2. Add the modern_override CTM folder as a fresh replacement
-              mkdir -p build_dir/assets/minecraft/optifine
-              cp -r modern_override/assets/minecraft/optifine/ctm build_dir/assets/minecraft/optifine/ 2>/dev/null || true
+              # 2. Add the modern_override bone_ends folder as a fresh replacement
+              mkdir -p build_dir/assets/minecraft/optifine/ctm
+              cp -r modern_override/assets/minecraft/optifine/ctm/bone_ends build_dir/assets/minecraft/optifine/ctm/ 2>/dev/null || true
             fi
           fi
 
