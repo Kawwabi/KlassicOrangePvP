@@ -189,18 +189,8 @@ jobs:
 
           # --- 1. SELECTIVE OVERRIDES & CONVERSION CLEANUP ---
 
-          # Creative Tabs Override (Format 12+)
-          CREATIVE_GUI="build_dir/assets/minecraft/textures/gui/container/creative_inventory"
-          if [ "${{ matrix.format }}" -ge 12 ]; then
-            if [ -f "modern_override/assets/minecraft/textures/gui/container/creative_inventory/tabsfor1.19.3+.png" ]; then
-              mkdir -p "$CREATIVE_GUI"
-              cp -f "modern_override/assets/minecraft/textures/gui/container/creative_inventory/tabsfor1.19.3+.png" "$CREATIVE_GUI/tabs.png"
-            fi
-          fi
-          rm -f "$CREATIVE_GUI/tabsfor1.19.3+.png" 2>/dev/null || true
-
-          # GUI Container Overrides for 1.9 - 1.12.2 (Formats 2 & 3)
-          if [ "${{ matrix.format }}" -ge 2 ] && [ "${{ matrix.format }}" -lt 4 ]; then
+          # GUI Container Overrides for 1.9+ (Formats 2+)
+          if [ "${{ matrix.format }}" -ge 2 ]; then
             GUI_CONT="build_dir/assets/minecraft/textures/gui/container"
             MOD_CONT="modern_override/assets/minecraft/textures/gui/container"
             mkdir -p "$GUI_CONT/creative_inventory"
@@ -210,13 +200,31 @@ jobs:
             cp -f "$MOD_CONT/brewing_stand.png" "$GUI_CONT/" 2>/dev/null || true
             cp -f "$MOD_CONT/creative_inventory/tab_inventory.png" "$GUI_CONT/creative_inventory/" 2>/dev/null || true
             
-            # 1.11+ & 1.12+ (Format 3): Llama UI, Recipe Book, Shulker Boxes
-            if [ "${{ matrix.format }}" -eq 3 ]; then
+            # 1.11+ & 1.12+ (Format 3+): Llama UI, Recipe Book, Shulker Boxes
+            if [ "${{ matrix.format }}" -ge 3 ]; then
               cp -f "$MOD_CONT/shulker_box.png" "$GUI_CONT/" 2>/dev/null || true
               cp -f "$MOD_CONT/horse.png" "$GUI_CONT/" 2>/dev/null || true
               cp -f "$MOD_CONT/crafting_table.png" "$GUI_CONT/" 2>/dev/null || true
             fi
+
+            # 1.13+ (Format 4+): Force inject remaining modern GUI files
+            if [ "${{ matrix.format }}" -ge 4 ]; then
+              if [ -d "modern_override/assets/minecraft/textures/gui" ]; then
+                mkdir -p build_dir/assets/minecraft/textures/gui
+                cp -rf modern_override/assets/minecraft/textures/gui/. build_dir/assets/minecraft/textures/gui/ 2>/dev/null || true
+              fi
+            fi
           fi
+
+          # Creative Tabs Override (Format 12+) 
+          CREATIVE_GUI="build_dir/assets/minecraft/textures/gui/container/creative_inventory"
+          if [ "${{ matrix.format }}" -ge 12 ]; then
+            if [ -f "modern_override/assets/minecraft/textures/gui/container/creative_inventory/tabsfor1.19.3+.png" ]; then
+              mkdir -p "$CREATIVE_GUI"
+              cp -f "modern_override/assets/minecraft/textures/gui/container/creative_inventory/tabsfor1.19.3+.png" "$CREATIVE_GUI/tabs.png"
+            fi
+          fi
+          rm -f "$CREATIVE_GUI/tabsfor1.19.3+.png" 2>/dev/null || true
 
           # Spawn Eggs for 1.9 to 1.12.2 (Formats 2 & 3)
           if [ "${{ matrix.format }}" -ge 2 ] && [ "${{ matrix.format }}" -lt 4 ]; then
@@ -229,11 +237,8 @@ jobs:
           # CTM Bone Ends Override for 1.11+ (Format 3+)
           if [ "${{ matrix.format }}" -ge 3 ]; then
             if [ -d "modern_override/assets/minecraft/optifine/ctm/default/bone_ends" ]; then
-              # 1. Delete any existing base bone_ends folders completely
               rm -rf build_dir/assets/minecraft/mcpatcher/ctm/default/bone_ends 2>/dev/null || true
               rm -rf build_dir/assets/minecraft/optifine/ctm/default/bone_ends 2>/dev/null || true
-              
-              # 2. Add the modern_override bone_ends folder as a fresh replacement
               mkdir -p build_dir/assets/minecraft/optifine/ctm/default
               cp -r modern_override/assets/minecraft/optifine/ctm/default/bone_ends build_dir/assets/minecraft/optifine/ctm/default/ 2>/dev/null || true
             fi
@@ -242,13 +247,10 @@ jobs:
           # CTM Metals and Gems Override for 1.13+ (Format 4+)
           if [ "${{ matrix.format }}" -ge 4 ]; then
             if [ -d "modern_override/assets/minecraft/optifine/ctm/default/metals_and_gems" ]; then
-              # 1. Delete the old individual ore/block folders completely
               for target_folder in coal_ore diamond_block diamond_ore emerald_block emerald_ore gold_block gold_ore iron_block iron_ore lapis_block lapis_ore nether_quartz_ore redstone_block redstone_ore; do
                 rm -rf "build_dir/assets/minecraft/mcpatcher/ctm/default/$target_folder" 2>/dev/null || true
                 rm -rf "build_dir/assets/minecraft/optifine/ctm/default/$target_folder" 2>/dev/null || true
               done
-              
-              # 2. Add the modern_override metals_and_gems folder
               mkdir -p build_dir/assets/minecraft/optifine/ctm/default
               cp -r modern_override/assets/minecraft/optifine/ctm/default/metals_and_gems build_dir/assets/minecraft/optifine/ctm/default/ 2>/dev/null || true
             fi
@@ -313,6 +315,14 @@ jobs:
             rm -f build_dir/assets/minecraft/lang/*.json 2>/dev/null || true
           fi
 
+          # Mojang Splash Screen (Introduced in 1.13 / Format 4)
+          TITLE_GUI="build_dir/assets/minecraft/textures/gui/title"
+          if [ "${{ matrix.format }}" -ge 6 ]; then
+            rm -f "$TITLE_GUI/mojang.png" 2>/dev/null || true
+          elif [ "${{ matrix.format }}" -ge 4 ]; then
+            rm -f "$TITLE_GUI/mojangstudios.png" 2>/dev/null || true
+          fi
+
           # Locale Files for 1.13+ (Format 4+)
           if [ "${{ matrix.format }}" -ge 4 ]; then
             mkdir -p build_dir/assets/minecraft/lang
@@ -322,20 +332,12 @@ jobs:
             rm -f build_dir/assets/minecraft/lang/*.lang 2>/dev/null || true
           fi
 
-          # Mojang Splash Screen (Introduced in 1.13 / Format 4)
-          TITLE_GUI="build_dir/assets/minecraft/textures/gui/title"
-          if [ "${{ matrix.format }}" -ge 6 ]; then
-            rm -f "$TITLE_GUI/mojang.png" 2>/dev/null || true
-          elif [ "${{ matrix.format }}" -ge 4 ]; then
-            rm -f "$TITLE_GUI/mojangstudios.png" 2>/dev/null || true
+          # Clean up slab and pressure plate files for versions above 1.14 (Format 5+)
+          if [ "${{ matrix.format }}" -ge 5 ]; then
+            find build_dir/assets/minecraft/blockstates/ -type f \( -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
+            find build_dir/assets/minecraft/models/block/ -type f \( -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
+            find build_dir/assets/minecraft/models/item/ -type f \( -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
           fi
-
-          # --- 2. REMOVE CONVERTER INTERFERENCE ---
-          find build_dir/assets/minecraft/blockstates/ -type f \( -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
-          find build_dir/assets/minecraft/models/block/ -type f \( -name "*banner*.json" -o -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
-          find build_dir/assets/minecraft/models/item/ -type f \( -name "*banner*.json" -o -name "*pressure_plate*.json" -o -name "*slab*.json" \) -delete 2>/dev/null || true
-          find build_dir/assets/minecraft/textures/entity/ -name "*banner*.png" -type f -delete 2>/dev/null || true
-          rm -rf build_dir/assets/minecraft/textures/entity/banner/ 2>/dev/null || true
 
           # --- 3. ERA MCPATCHER / OPTIFINE FOLDER FIXES ---
           if [ "${{ matrix.format }}" -lt 4 ]; then

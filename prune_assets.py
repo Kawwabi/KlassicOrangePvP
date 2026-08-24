@@ -39,6 +39,10 @@ else:
         except Exception:
             pass
 
+# --- PURPLE GLAZED TERRACOTTA (< 1.12 & > 1.20) ---
+if fmt < 3 or fmt > 15:
+    purge_glob("textures/**/purple_glazed_terracotta.png")
+
 # --- 1.21+ (Format < 88) ---
 if fmt < 88:
     purge_glob("**/ctm/**/crafter*")
