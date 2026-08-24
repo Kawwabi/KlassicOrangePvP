@@ -189,6 +189,32 @@ jobs:
 
           # --- 1. SELECTIVE OVERRIDES & CONVERSION CLEANUP ---
 
+          # CTM Cleanup and Injection
+          if [ "${{ matrix.format }}" -ge 4 ]; then
+            # The Flattening (1.13+) changed block IDs and structures.
+            # Delete legacy CTM completely to prevent conflicts.
+            rm -rf build_dir/assets/minecraft/mcpatcher/ctm 2>/dev/null || true
+            rm -rf build_dir/assets/minecraft/optifine/ctm 2>/dev/null || true
+          else
+            # For 1.8 to 1.12.2 (Formats 1, 2, 3) specific overrides:
+            # 1. Bone Ends (Added 1.10 / Format 2+)
+            if [ "${{ matrix.format }}" -ge 2 ]; then
+              if [ -d "modern_override/assets/minecraft/optifine/ctm/default/bone_ends" ]; then
+                mkdir -p build_dir/assets/minecraft/mcpatcher/ctm/default
+                cp -r modern_override/assets/minecraft/optifine/ctm/default/bone_ends build_dir/assets/minecraft/mcpatcher/ctm/default/
+              fi
+            fi
+          fi
+
+          # Apply Modern Overrides
+          # Formats 4+ (1.13+) get the FULL modern override package (models, textures, modern CTM structure)
+          if [ "${{ matrix.format }}" -ge 4 ]; then
+            if [ -d "modern_override" ]; then
+              # Using -rf to purposefully overwrite legacy files with modern ones
+              cp -rf modern_override/* build_dir/ 2>/dev/null || true
+            fi
+          fi
+
           # GUI Container Overrides for 1.9+ (Formats 2+)
           if [ "${{ matrix.format }}" -ge 2 ]; then
             GUI_CONT="build_dir/assets/minecraft/textures/gui/container"
@@ -205,14 +231,6 @@ jobs:
               cp -f "$MOD_CONT/shulker_box.png" "$GUI_CONT/" 2>/dev/null || true
               cp -f "$MOD_CONT/horse.png" "$GUI_CONT/" 2>/dev/null || true
               cp -f "$MOD_CONT/crafting_table.png" "$GUI_CONT/" 2>/dev/null || true
-            fi
-
-            # 1.13+ (Format 4+): Force inject remaining modern GUI files
-            if [ "${{ matrix.format }}" -ge 4 ]; then
-              if [ -d "modern_override/assets/minecraft/textures/gui" ]; then
-                mkdir -p build_dir/assets/minecraft/textures/gui
-                cp -rf modern_override/assets/minecraft/textures/gui/. build_dir/assets/minecraft/textures/gui/ 2>/dev/null || true
-              fi
             fi
           fi
 
@@ -231,28 +249,6 @@ jobs:
             if [ -d "modern_override/assets/minecraft/optifine/cit/spawn_egg" ]; then
               mkdir -p build_dir/assets/minecraft/mcpatcher/cit/spawn_egg
               cp -r modern_override/assets/minecraft/optifine/cit/spawn_egg/* build_dir/assets/minecraft/mcpatcher/cit/spawn_egg/ 2>/dev/null || true
-            fi
-          fi
-
-          # CTM Bone Ends Override for 1.11+ (Format 3+)
-          if [ "${{ matrix.format }}" -ge 3 ]; then
-            if [ -d "modern_override/assets/minecraft/optifine/ctm/default/bone_ends" ]; then
-              rm -rf build_dir/assets/minecraft/mcpatcher/ctm/default/bone_ends 2>/dev/null || true
-              rm -rf build_dir/assets/minecraft/optifine/ctm/default/bone_ends 2>/dev/null || true
-              mkdir -p build_dir/assets/minecraft/optifine/ctm/default
-              cp -r modern_override/assets/minecraft/optifine/ctm/default/bone_ends build_dir/assets/minecraft/optifine/ctm/default/ 2>/dev/null || true
-            fi
-          fi
-
-          # CTM Metals and Gems Override for 1.13+ (Format 4+)
-          if [ "${{ matrix.format }}" -ge 4 ]; then
-            if [ -d "modern_override/assets/minecraft/optifine/ctm/default/metals_and_gems" ]; then
-              for target_folder in coal_ore diamond_block diamond_ore emerald_block emerald_ore gold_block gold_ore iron_block iron_ore lapis_block lapis_ore nether_quartz_ore redstone_block redstone_ore; do
-                rm -rf "build_dir/assets/minecraft/mcpatcher/ctm/default/$target_folder" 2>/dev/null || true
-                rm -rf "build_dir/assets/minecraft/optifine/ctm/default/$target_folder" 2>/dev/null || true
-              done
-              mkdir -p build_dir/assets/minecraft/optifine/ctm/default
-              cp -r modern_override/assets/minecraft/optifine/ctm/default/metals_and_gems build_dir/assets/minecraft/optifine/ctm/default/ 2>/dev/null || true
             fi
           fi
 
@@ -276,31 +272,11 @@ jobs:
             find build_dir/assets/minecraft/blockstates/ -type f -name "*bed*.json" -delete 2>/dev/null || true
           fi
 
-          # Command Block Models: Pre-Flattening (Formats 2 & 3) vs Modern (Format 4+)
+          # Command Block Models: Pre-Flattening (Formats 2 & 3)
           if [ "${{ matrix.format }}" -ge 2 ] && [ "${{ matrix.format }}" -lt 4 ]; then
             if [ -d "src/assets/minecraft/models/block" ]; then
               mkdir -p build_dir/assets/minecraft/models/block
               cp -f src/assets/minecraft/models/block/*command_block*.json build_dir/assets/minecraft/models/block/ 2>/dev/null || true
-            fi
-          elif [ "${{ matrix.format }}" -ge 4 ]; then
-            if [ -d "modern_override/assets/minecraft/models/block" ]; then
-              mkdir -p build_dir/assets/minecraft/models/block
-              cp -f modern_override/assets/minecraft/models/block/*command_block*.json build_dir/assets/minecraft/models/block/ 2>/dev/null || true
-            fi
-          fi
-
-          # Modern GUI Sprites (Format 18+)
-          if [ "${{ matrix.format }}" -ge 18 ]; then
-            if [ -d "modern_override/assets/minecraft/textures/gui/sprites" ]; then
-              mkdir -p build_dir/assets/minecraft/textures/gui/sprites
-              cp -rf modern_override/assets/minecraft/textures/gui/sprites/. build_dir/assets/minecraft/textures/gui/sprites/ 2>/dev/null || true
-            fi
-          fi
-
-          # Modern Overrides for Format 4+ (Flattening+)
-          if [ "${{ matrix.format }}" -ge 4 ]; then
-            if [ -d "modern_override" ]; then
-              cp -rn modern_override/* build_dir/ 2>/dev/null || true
             fi
           fi
 
@@ -350,6 +326,7 @@ jobs:
 
             if [ -d "build_dir/assets/minecraft/mcpatcher" ]; then
               find build_dir/assets/minecraft/mcpatcher/ -type f -name "*.properties" -exec sed -i 's/optifine\//mcpatcher\//g' {} + 2>/dev/null || true
+              find build_dir/assets/minecraft/mcpatcher/ -type f -name "*.properties" -exec sed -i 's/item\//items\//g; s/block\//blocks\//g' {} + 2>/dev/null || true
             fi
 
             # Re-route any leaked 'item'/'block' directories to legacy plural equivalents
@@ -374,10 +351,6 @@ jobs:
             if [ -d "build_dir/assets/minecraft/optifine" ]; then
               find build_dir/assets/minecraft/optifine/ -type f -name "*.properties" -exec sed -i 's/mcpatcher\//optifine\//g' {} + 2>/dev/null || true
             fi
-
-            find build_dir/assets/minecraft/models/item/ -type f -name "*bed*.json" -delete 2>/dev/null || true
-            find build_dir/assets/minecraft/models/block/ -type f -name "*bed*.json" -delete 2>/dev/null || true
-            find build_dir/assets/minecraft/blockstates/ -type f -name "*bed*.json" -delete 2>/dev/null || true
 
             if [ -d "build_dir/assets/minecraft/textures/items" ]; then
               mkdir -p build_dir/assets/minecraft/textures/item

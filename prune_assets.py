@@ -57,7 +57,9 @@ version_windows = {
     "**/deepslate*": (7, None),
     "**/polished_deepslate*": (7, None),
     "**/glass/tinted_glass*": (7, None),
+    "**/metals_and_gems/copper*": (7, None),
     "**/metals_and_gems/ore/deepslate_*": (7, None),
+    "**/metals_and_gems/ore/copper_ore*": (7, None),
     f"{items_dir}/amethyst_shard.png": (7, None),
     
     # --- 1.16+ CONTENT ---
@@ -73,10 +75,13 @@ version_windows = {
     "**/ore/nether_gold_ore*": (5, None),
     
     # --- 1.15+ CONTENT ---
-    "**/bee_*": (5, None),
+    "**/ctm/default/bee*": (5, None),
     "**/honeycomb*": (5, None),
     
     # --- 1.14+ CONTENT ---
+    "**/ctm/default/cartography_table*": (4, None),
+    "**/ctm/default/loom*": (4, None),
+    "**/polished/smooth_stone*": (4, None),
     f"{blocks_dir}/cornflower.png": (4, None),
     f"{blocks_dir}/kelp*.png": (4, None),
     f"{blocks_dir}/lectern_*.png": (4, None),
@@ -91,8 +96,9 @@ version_windows = {
     
     # --- 1.9 & 1.10+ CONTENT ---
     f"{blocks_dir}/purpur_*.png": (2, None),
-    "**/ctm/**/purpur*": (2, None),
+    "**/ctm/default/purpur*": (2, None),
     f"{blocks_dir}/bone_block*.png": (2, None),
+    "**/ctm/default/bone_ends*": (2, None),
     f"{blocks_dir}/end_rod.png": (2, None),
     f"{blocks_dir}/chorus_*.png": (2, None),
     f"{items_dir}/elytra*": (2, None),
