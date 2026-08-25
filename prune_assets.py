@@ -207,7 +207,7 @@ if fmt >= 4:
         "mutton_cooked.png", "rabbit_raw.png", "rabbit_cooked.png", "fish_cod_raw.png", "fish_cod_cooked.png", "fish_salmon_raw.png", 
         "fish_salmon_cooked.png", "fish_pufferfish_raw.png", "fish_clownfish_raw.png", "melon.png", "melon_speckled.png", "apple_golden.png", 
         "carrot_golden.png", "minecart_normal.png", "door_*.png", "dye_powder_*.png", "record_*.png", "seeds_*.png", "potion_bottle_*.png", 
-        "empty_armor_slot_*.png", "redstone_dust.png", "reeds.png", "slimeball.png", "netherbrick.png", "sign.png", "bucket_empty.png", 
+        "redstone_dust.png", "reeds.png", "slimeball.png", "netherbrick.png", "sign.png", "bucket_empty.png", 
         "bucket_water.png", "bucket_lava.png", "bucket_milk.png", "book_normal.png", "book_enchanted.png", "book_writable.png", "book_written.png", 
         "map_empty.png", "map_filled.png", "totem.png"
     ]
