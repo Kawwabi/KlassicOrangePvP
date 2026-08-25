@@ -77,6 +77,13 @@ version_windows = {
     # --- 1.15+ CONTENT ---
     "**/ctm/default/bee*": (5, None),
     "**/honeycomb*": (5, None),
+    "textures/models/armor/*": (5, None),
+    f"{items_dir}/*_helmet.png": (5, None),
+    f"{items_dir}/*_chestplate.png": (5, None),
+    f"{items_dir}/*_leggings.png": (5, None),
+    f"{items_dir}/*_boots.png": (5, None),
+    f"{items_dir}/*_horse_armor.png": (5, None),
+    "textures/entity/horse/armor/*": (5, None),
     
     # --- 1.14+ CONTENT ---
     "**/ctm/default/cartography_table*": (4, None),
