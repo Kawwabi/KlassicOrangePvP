@@ -36,8 +36,8 @@ bed_colors = ["black", "blue", "brown", "cyan", "gray", "green", "light_blue",
 # =========================================================================
 version_windows = {
     # --- TEXTURE REPLACEMENTS ---
-    f"{blocks_dir}/purple_glazed_terracotta.png": (3, 14), # Added 1.12, Replaced 1.20
-    "textures/entity/zombie_pigman.png": (1, 4),         # Replaced by Zombified Piglin in 1.16
+    f"{blocks_dir}/*_glazed_terracotta.png": (3, 14), # Added 1.12, Replaced 1.20
+    "textures/entity/zombie_pigman.png": (1, 4),      # Replaced by Zombified Piglin in 1.16
     
     # --- 1.21+ CONTENT ---
     "**/crafter*": (88, None),
@@ -129,7 +129,6 @@ else:
     purge_glob(f"{items_dir}/clock.png")
     purge_glob(f"{items_dir}/compass.png")
 
-
 # =========================================================================
 # SPAWN EGGS & OPTIFINE CIT
 # =========================================================================
@@ -147,6 +146,21 @@ else:
                 f.writelines(lines)
         except Exception:
             pass
+
+# =========================================================================
+# OPTIFINE CTM PROPERTIES PRUNING (Bridge PvP)
+# =========================================================================
+if fmt >= 4:
+    # 1.13+ Modern: Prune the legacy 1.8.9 stained clay properties
+    for color in bed_colors:
+        purge_glob(f"**/ctm/**/{color}_99.properties")
+else:
+    # 1.12- Legacy: Prune the 1.13+ terracotta properties
+    for color in bed_colors:
+        purge_glob(f"**/ctm/**/{color}.properties")
+        # Safety catch below to wipe any old format ones you generated previously
+        purge_glob(f"**/ctm/**/{color}_terracotta_99.properties") 
+    purge_glob("**/ctm/**/terracotta.properties")
 
 # =========================================================================
 # LEGACY VS MODERN FLATTENING SEPARATIONS & RENAMES
