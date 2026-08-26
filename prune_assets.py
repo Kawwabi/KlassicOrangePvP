@@ -192,12 +192,12 @@ if fmt >= 5:
         purge_glob(f"{blocks_dir}/{color}_bed_*.png")
 
 if fmt < 4:
-    purge_glob(f"{items_dir}/oak_sign*")
     modern_dyes = ["black", "white", "blue", "brown", "red", "green", "yellow", "cyan", "gray", "light_blue", "light_gray", "lime", "magenta", "orange", "pink", "purple"]
     for dye in modern_dyes:
         purge_glob(f"{items_dir}/{dye}_dye*")
 
 if fmt >= 4:
+    # FORMAT 4+ / 1.13+ - DELETE LEGACY FILES
     legacy_blocks = [
         "brick.png", "potatoes_stage_*.png", "carrots_stage_*.png", "carrot_stage_*.png", "nether_wart_stage_*.png", "cocoa_stage_*.png",
         "endframe_*.png", "farmland_dry.png", "farmland_wet.png", "flower_allium.png", "flower_blue_orchid.png", "flower_dandelion.png", 
@@ -215,7 +215,9 @@ if fmt >= 4:
         "anvil_top_damaged_*.png", "web.png", "wheat_stage_*.png", "stone_slab_top.png", "stone_slab_side.png", "stonebrick.png", "stonebrick_mossy.png", 
         "stonebrick_cracked.png", "stonebrick_carved.png", "cobblestone_mossy.png", "sapling_*.png", "redstone_torch_on.png", "redstone_torch_off.png",
         "stone_andesite*.png", "stone_diorite*.png", "stone_granite*.png", "log_*.png", "planks_*.png", "tallgrass.png", "double_plant_*.png", 
-        "trip_wire.png", "trip_wire_source.png", "deadbush.png", "trapdoor.png", "torch_on.png", "item_frame.png", "reeds.png", "sponge_wet.png"
+        "trip_wire.png", "trip_wire_source.png", "deadbush.png", "trapdoor.png", "torch_on.png", "item_frame.png", "reeds.png", "sponge_wet.png",
+        "dropper_front_vertical.png", "dropper_front_horizontal.png", "dispenser_front_vertical.png", "dispenser_front_horizontal.png",
+        "noteblock.png"
     ]
     for lb in legacy_blocks:
         purge_glob(f"{blocks_dir}/{lb}")
@@ -239,23 +241,25 @@ if fmt >= 4:
     purge_glob(f"{blocks_dir}/**/pumpkin_face_on.png")
 
 else:
+    # FORMAT 1-3 / 1.12 AND BELOW - DELETE MODERN FILES
     modern_blocks = [
         "bricks.png", "potatoes_stage[0-9].png", "carrots_stage[0-9].png", "nether_wart_stage[0-9].png", "cocoa_stage[0-9].png", "farmland.png", 
         "farmland_moist.png", "allium.png", "blue_orchid.png", "dandelion.png", "azure_bluet.png", "oxeye_daisy.png", "poppy.png", "*_tulip.png", 
         "rail.png", "powered_rail.png", "powered_rail_on.png", "detector_rail.png", "detector_rail_on.png", "activator_rail.png", "activator_rail_on.png", 
         "sandstone.png", "chiseled_sandstone.png", "cut_sandstone.png", "red_sandstone.png", "chiseled_red_sandstone.png", "cut_red_sandstone.png",
         "*_wool.png", "melon_stem.png", "attached_melon_stem.png", "pumpkin_stem.png", "attached_pumpkin_stem.png", "red_mushroom_block.png", 
-        "brown_mushroom_block.png", "mushroom_stem.png", "nether_bricks.png", "oak_door_*.png", "iron_door_*.png", "spruce_door_*.png", 
-        "birch_door_*.png", "jungle_door_*.png", "acacia_door_*.png", "dark_oak_door_*.png", "*_stained_glass.png", "*_stained_glass_pane_top.png",
-        "comparator.png", "furnace_front.png", "grass_block_*.png", "terracotta.png", "*_terracotta.png", "dark_prismarine.png", "prismarine.png",
-        "oak_leaves.png", "spruce_leaves.png", "birch_leaves.png", "jungle_leaves.png", "acacia_leaves.png", "dark_oak_leaves.png", "slime_block.png", 
-        "redstone_lamp.png", "piston_top.png", "anvil.png", "anvil_top.png", "chipped_anvil_top.png", "damaged_anvil_top.png", "anvil_top_damaged.png", "cobweb.png", 
-        "wheat_stage[0-7].png", "smooth_stone_slab_*.png", "stone_bricks.png", "mossy_stone_bricks.png", "cracked_stone_bricks.png", 
-        "chiseled_stone_bricks.png", "mossy_cobblestone.png", "*_sapling.png", "redstone_torch.png", "andesite.png", "diorite.png", "granite.png", 
-        "polished_andesite.png", "polished_diorite.png", "polished_granite.png", "oak_log*.png", "spruce_log*.png", "birch_log*.png", "jungle_log*.png", 
-        "acacia_log*.png", "dark_oak_log*.png", "*_planks.png", "tall_grass*.png", "large_fern_*.png", "lilac_*.png", "peony_*.png", "rose_bush_*.png", 
-        "sunflower_*.png", "tripwire.png", "tripwire_hook.png", "dead_bush.png", "oak_trapdoor.png", "torch.png", "itemframe_background.png", 
-        "sugar_cane.png", "wet_sponge.png"
+        "brown_mushroom_block.png", "red_mushroom.png", "brown_mushroom.png", "mushroom_stem.png", "nether_bricks.png", "oak_door_*.png", 
+        "iron_door_*.png", "spruce_door_*.png", "birch_door_*.png", "jungle_door_*.png", "acacia_door_*.png", "dark_oak_door_*.png", 
+        "*_stained_glass.png", "*_stained_glass_pane_top.png", "comparator.png", "furnace_front.png", "grass_block_*.png", "terracotta.png", 
+        "*_terracotta.png", "dark_prismarine.png", "prismarine.png", "oak_leaves.png", "spruce_leaves.png", "birch_leaves.png", "jungle_leaves.png", 
+        "acacia_leaves.png", "dark_oak_leaves.png", "slime_block.png", "redstone_lamp.png", "piston_top.png", "anvil.png", "anvil_top.png", 
+        "chipped_anvil_top.png", "damaged_anvil_top.png", "anvil_top_damaged.png", "cobweb.png", "wheat_stage[0-7].png", "smooth_stone_slab_*.png", 
+        "stone_bricks.png", "mossy_stone_bricks.png", "cracked_stone_bricks.png", "chiseled_stone_bricks.png", "mossy_cobblestone.png", "*_sapling.png", 
+        "redstone_torch.png", "andesite.png", "diorite.png", "granite.png", "polished_andesite.png", "polished_diorite.png", "polished_granite.png", 
+        "oak_log*.png", "spruce_log*.png", "birch_log*.png", "jungle_log*.png", "acacia_log*.png", "dark_oak_log*.png", "*_planks.png", "tall_grass*.png", 
+        "large_fern_*.png", "lilac_*.png", "peony_*.png", "rose_bush_*.png", "sunflower_*.png", "tripwire.png", "tripwire_hook.png", "dead_bush.png", 
+        "oak_trapdoor.png", "torch.png", "itemframe_background.png", "sugar_cane.png", "wet_sponge.png", "end_portal_frame_*.png", 
+        "dropper_front.png", "dispenser_front.png", "note_block.png"
     ]
     for mb in modern_blocks:
         purge_glob(f"{blocks_dir}/{mb}")
@@ -271,7 +275,9 @@ else:
         "written_book.png", "potion.png", "glass_bottle.png", "bucket.png", "water_bucket.png", "lava_bucket.png", "milk_bucket.png", "redstone.png", 
         "bone_meal.png", "cocoa_beans.png", "lapis_lazuli.png", "ink_sac.png", "wheat_seeds.png", "melon_seeds.png", "pumpkin_seeds.png", "music_disc_*.png", 
         "minecart.png", "chest_minecart.png", "furnace_minecart.png", "tnt_minecart.png", "hopper_minecart.png", "command_block_minecart.png", "oak_door.png", 
-        "spruce_door.png", "birch_door.png", "jungle_door.png", "acacia_door.png", "dark_oak_door.png", "iron_door.png"
+        "spruce_door.png", "birch_door.png", "jungle_door.png", "acacia_door.png", "dark_oak_door.png", "iron_door.png", "oak_sign.png", 
+        "spruce_sign.png", "birch_sign.png", "jungle_sign.png", "acacia_sign.png", "dark_oak_sign.png", "cod_bucket.png", "salmon_bucket.png", 
+        "pufferfish_bucket.png", "tropical_fish_bucket.png"
     ]
     for mi in modern_items:
         purge_glob(f"{items_dir}/{mi}")
