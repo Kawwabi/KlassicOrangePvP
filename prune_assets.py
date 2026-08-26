@@ -148,19 +148,16 @@ else:
             pass
 
 # =========================================================================
-# OPTIFINE CTM PROPERTIES PRUNING (Bridge PvP)
+# TERRACOTTA VS HARDENED CLAY BLOCK TEXTURE PRUNING
 # =========================================================================
 if fmt >= 4:
-    # 1.13+ Modern: Prune the legacy 1.8.9 stained clay properties
-    for color in bed_colors:
-        purge_glob(f"**/ctm/**/{color}_99.properties")
+    # 1.13+ Modern: Prune the legacy 1.12- hardened clay texture files
+    purge_glob(f"{blocks_dir}/hardened_clay.png")
+    purge_glob(f"{blocks_dir}/hardened_clay_stained_*.png")
 else:
-    # 1.12- Legacy: Prune the 1.13+ terracotta properties
-    for color in bed_colors:
-        purge_glob(f"**/ctm/**/{color}.properties")
-        # Safety catch below to wipe any old format ones you generated previously
-        purge_glob(f"**/ctm/**/{color}_terracotta_99.properties") 
-    purge_glob("**/ctm/**/terracotta.properties")
+    # 1.12- Legacy: Prune the modern 1.13+ terracotta texture files
+    purge_glob(f"{blocks_dir}/terracotta.png")
+    purge_glob(f"{blocks_dir}/*_terracotta.png")
 
 # =========================================================================
 # LEGACY VS MODERN FLATTENING SEPARATIONS & RENAMES
