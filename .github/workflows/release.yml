@@ -207,8 +207,8 @@ jobs:
           fi
 
           # Apply Modern Overrides
-          # Formats 5+ (1.15+) get the FULL modern override package (models, textures, modern CTM structure)
-          if [ "${{ matrix.format }}" -ge 5 ]; then
+          # Formats 4+ (1.13+) get the FULL modern override package (models, textures, modern CTM structure)
+          if [ "${{ matrix.format }}" -ge 4 ]; then
             if [ -d "modern_override" ]; then
               # Using -rf to purposefully overwrite legacy files with modern ones
               cp -rf modern_override/* build_dir/ 2>/dev/null || true
