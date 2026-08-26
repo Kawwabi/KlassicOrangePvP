@@ -47,6 +47,13 @@ version_windows = {
     f"{items_dir}/copper_axe*": (88, None),
     f"{items_dir}/copper_hoe*": (88, None),
     f"{items_dir}/copper_sword*": (88, None),
+    "**/environment/celestial*": (75, None),
+    
+    # --- 1.19.4+ GLINTS ---
+    "**/enchanted_glint_entity.png": (13, None),
+    "**/enchanted_glint_item.png": (13, None),
+    "**/enchanted_glint_armor.png": (13, None),
+    "**/enchanted_item_glint.png": (1, 12),
 
     # --- 1.19+ CONTENT ---
     "**/froglights*": (9, None),
@@ -85,7 +92,7 @@ version_windows = {
     f"{items_dir}/*_horse_armor.png": (5, None),
     "textures/entity/horse/armor/*": (5, None),
     
-    # --- 1.14+ CONTENT ---
+    # --- 1.14+ CONTENT (AND PARTICLES) ---
     "**/ctm/default/cartography_table*": (4, None),
     "**/ctm/default/loom*": (4, None),
     "**/polished/smooth_stone*": (4, None),
@@ -97,6 +104,9 @@ version_windows = {
     f"{items_dir}/campfire*": (4, None),
     f"{items_dir}/lantern*": (4, None),
     f"{items_dir}/phantom_membrane*": (4, None),
+    "textures/particle/damage.png": (4, None),
+    "textures/particle/heart.png": (4, None),
+    "textures/particle/particles.png": (1, 3), 
     
     # --- 1.13+ CONTENT ---
     f"{blocks_dir}/stripped_*.png": (4, None),
@@ -239,7 +249,7 @@ else:
         "birch_door_*.png", "jungle_door_*.png", "acacia_door_*.png", "dark_oak_door_*.png", "*_stained_glass.png", "*_stained_glass_pane_top.png",
         "comparator.png", "furnace_front.png", "grass_block_*.png", "terracotta.png", "*_terracotta.png", "dark_prismarine.png", "prismarine.png",
         "oak_leaves.png", "spruce_leaves.png", "birch_leaves.png", "jungle_leaves.png", "acacia_leaves.png", "dark_oak_leaves.png", "slime_block.png", 
-        "redstone_lamp.png", "piston_top.png", "anvil.png", "anvil_top.png", "chipped_anvil_top.png", "damaged_anvil_top.png", "cobweb.png", 
+        "redstone_lamp.png", "piston_top.png", "anvil.png", "anvil_top.png", "chipped_anvil_top.png", "damaged_anvil_top.png", "anvil_top_damaged.png", "cobweb.png", 
         "wheat_stage[0-7].png", "smooth_stone_slab_*.png", "stone_bricks.png", "mossy_stone_bricks.png", "cracked_stone_bricks.png", 
         "chiseled_stone_bricks.png", "mossy_cobblestone.png", "*_sapling.png", "redstone_torch.png", "andesite.png", "diorite.png", "granite.png", 
         "polished_andesite.png", "polished_diorite.png", "polished_granite.png", "oak_log*.png", "spruce_log*.png", "birch_log*.png", "jungle_log*.png", 
