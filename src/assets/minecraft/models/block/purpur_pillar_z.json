@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "minecraft:block/cube_column",
+	"parent": "minecraft:blocks/cube_column",
 	"textures": {
-		"0": "block/purpur_pillar_top",
-		"1": "block/purpur_pillar",
-		"particle": "block/purpur_pillar_top"
+		"0": "blocks/purpur_pillar_top",
+		"1": "blocks/purpur_pillar",
+		"particle": "blocks/purpur_pillar_top"
 	},
 	"elements": [
 		{

@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "minecraft:block/cube_column",
+	"parent": "minecraft:blocks/cube_column",
 	"textures": {
-		"0": "block/bone_block_top",
-		"1": "block/bone_block_side",
-		"particle": "block/bone_block_top"
+		"0": "blocks/bone_block_top",
+		"1": "blocks/bone_block_side",
+		"particle": "blocks/bone_block_top"
 	},
 	"elements": [
 		{
