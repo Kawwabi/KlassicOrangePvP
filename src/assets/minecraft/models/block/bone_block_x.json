@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "minecraft:blocks/cube_column",
+	"parent": "minecraft:block/cube_column",
 	"textures": {
 		"0": "blocks/bone_block_top",
 		"1": "blocks/bone_block_side",
