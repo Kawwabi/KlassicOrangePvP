@@ -157,19 +157,6 @@ else:
     purge_glob(f"{blocks_dir}/*_terracotta.png")
 
 # =========================================================================
-# ARMOR PRUNING FOR 1.14+ (Targeting specific materials avoids breaking empty slots)
-# =========================================================================
-if fmt >= 4:
-    purge_glob("textures/models/armor/*.png")
-    purge_glob("textures/entity/horse/armor/*.png")
-    
-    armor_materials = ["leather", "chainmail", "iron", "gold", "golden", "diamond", "netherite", "turtle"]
-    for mat in armor_materials:
-        for piece in ["helmet", "chestplate", "leggings", "boots"]:
-            purge_glob(f"{items_dir}/{mat}_{piece}.png")
-        purge_glob(f"{items_dir}/{mat}_horse_armor.png")
-
-# =========================================================================
 # LEGACY VS MODERN FLATTENING SEPARATIONS & RENAMES
 # =========================================================================
 if fmt < 4 or fmt > 8:
@@ -184,7 +171,7 @@ if fmt < 4:
 if fmt >= 4:
     # FORMAT 4+ / 1.13+ - DELETE LEGACY FILES
     legacy_blocks = [
-        "brick.png", "potatoes_stage_*.png", "carrots_stage_*.png", "carrot_stage_*.png", "nether_wart_stage_*.png",
+        "brick.png", "potatoes_stage_*.png", "carrots_stage_*.png", "carrot_stage_*.png", "nether_wart_stage_*.png", "cocoa_stage_*.png",
         "endframe_*.png", "farmland_dry.png", "farmland_wet.png", "flower_allium.png", "flower_blue_orchid.png", "flower_dandelion.png", 
         "flower_houstonia.png", "flower_oxeye_daisy.png", "flower_pot.png", "flower_rose.png", "flower_tulip_*.png", "rail_normal.png", 
         "rail_normal_turned.png", "rail_golden.png", "rail_golden_powered.png", "rail_detector.png", "rail_detector_powered.png", 
@@ -202,7 +189,7 @@ if fmt >= 4:
         "stone_andesite*.png", "stone_diorite*.png", "stone_granite*.png", "log_*.png", "planks_*.png", "tallgrass.png", "double_plant_*.png", 
         "trip_wire.png", "trip_wire_source.png", "deadbush.png", "trapdoor.png", "torch_on.png", "item_frame.png", "reeds.png", "sponge_wet.png",
         "dropper_front_vertical.png", "dropper_front_horizontal.png", "dispenser_front_vertical.png", "dispenser_front_horizontal.png",
-        "noteblock.png"
+        "noteblock.png", "ice_packed.png", "quartz_ore.png", "quartz_block_lines.png", "quartz_block_lines_top.png"
     ]
     for lb in legacy_blocks:
         purge_glob(f"{blocks_dir}/{lb}")
@@ -244,7 +231,8 @@ else:
         "oak_log*.png", "spruce_log*.png", "birch_log*.png", "jungle_log*.png", "acacia_log*.png", "dark_oak_log*.png", "*_planks.png", "tall_grass*.png", 
         "large_fern_*.png", "lilac_*.png", "peony_*.png", "rose_bush_*.png", "sunflower_*.png", "tripwire.png", "tripwire_hook.png", "dead_bush.png", 
         "oak_trapdoor.png", "torch.png", "itemframe_background.png", "sugar_cane.png", "wet_sponge.png", "end_portal_frame_*.png", 
-        "dropper_front.png", "dispenser_front.png", "note_block.png"
+        "dropper_front.png", "dispenser_front.png", "note_block.png", "packed_ice.png", "nether_quartz_ore.png",
+        "quartz_pillar_side.png", "quartz_pillar.png", "quartz_pillar_top.png", "cocoa_stage0.png", "cocoa_stage1.png", "cocoa_stage2.png"
     ]
     for mb in modern_blocks:
         purge_glob(f"{blocks_dir}/{mb}")
@@ -269,6 +257,14 @@ else:
 
     purge_glob(f"{blocks_dir}/carved_pumpkin.png")
     purge_glob(f"{blocks_dir}/jack_o_lantern.png")
+
+if fmt >= 5:
+    purge_glob(f"{blocks_dir}/*trapdoor*.png")
+elif fmt < 4:
+    for t_file in glob.glob(os.path.join(base_dir, blocks_dir, "*trapdoor*.png")):
+        basename = os.path.basename(t_file)
+        if basename != "trapdoor.png":
+            purge_glob(f"{blocks_dir}/{basename}")
 
 # Lectern: Prune under 1.14 (fmt < 4) and above 1.18 (fmt > 8)
 if fmt < 4 or fmt > 8:
