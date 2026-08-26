@@ -84,13 +84,6 @@ version_windows = {
     # --- 1.15+ CONTENT ---
     "**/ctm/default/bee*": (5, None),
     "**/honeycomb*": (5, None),
-    "textures/models/armor/*": (5, None),
-    f"{items_dir}/*_helmet.png": (5, None),
-    f"{items_dir}/*_chestplate.png": (5, None),
-    f"{items_dir}/*_leggings.png": (5, None),
-    f"{items_dir}/*_boots.png": (5, None),
-    f"{items_dir}/*_horse_armor.png": (5, None),
-    "textures/entity/horse/armor/*": (5, None),
     
     # --- 1.14+ CONTENT (AND PARTICLES) ---
     "**/ctm/default/cartography_table*": (4, None),
@@ -162,6 +155,19 @@ if fmt >= 4:
 else:
     purge_glob(f"{blocks_dir}/terracotta.png")
     purge_glob(f"{blocks_dir}/*_terracotta.png")
+
+# =========================================================================
+# ARMOR PRUNING FOR 1.14+ (Targeting specific materials avoids breaking empty slots)
+# =========================================================================
+if fmt >= 4:
+    purge_glob("textures/models/armor/*.png")
+    purge_glob("textures/entity/horse/armor/*.png")
+    
+    armor_materials = ["leather", "chainmail", "iron", "gold", "golden", "diamond", "netherite", "turtle"]
+    for mat in armor_materials:
+        for piece in ["helmet", "chestplate", "leggings", "boots"]:
+            purge_glob(f"{items_dir}/{mat}_{piece}.png")
+        purge_glob(f"{items_dir}/{mat}_horse_armor.png")
 
 # =========================================================================
 # LEGACY VS MODERN FLATTENING SEPARATIONS & RENAMES
@@ -282,7 +288,7 @@ if fmt >= 5:
     purge_glob(f"{items_dir}/beetroot_seeds.png")
     purge_glob(f"{items_dir}/seeds_beetroot.png")
 
-    # The Giant Above 1.14 Block (fmt >= 5)
+# The Giant Above 1.14 Block (fmt >= 5)
 if fmt >= 5:
     # Planks and Logs (apart from spruce planks handled separately)
     wood_types = ["oak", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "crimson", "warped", "bamboo", "bamboo_mosaic"]
