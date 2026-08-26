@@ -157,6 +157,19 @@ else:
     purge_glob(f"{blocks_dir}/*_terracotta.png")
 
 # =========================================================================
+# ARMOR PRUNING FOR 1.14+ (Targeting specific materials avoids breaking empty slots)
+# =========================================================================
+if fmt >= 4:
+    purge_glob("textures/models/armor/*.png")
+    purge_glob("textures/entity/horse/armor/*.png")
+    
+    armor_materials = ["leather", "chainmail", "iron", "gold", "golden", "diamond", "netherite", "turtle"]
+    for mat in armor_materials:
+        for piece in ["helmet", "chestplate", "leggings", "boots"]:
+            purge_glob(f"{items_dir}/{mat}_{piece}.png")
+        purge_glob(f"{items_dir}/{mat}_horse_armor.png")
+
+# =========================================================================
 # LEGACY VS MODERN FLATTENING SEPARATIONS & RENAMES
 # =========================================================================
 if fmt < 4 or fmt > 8:
