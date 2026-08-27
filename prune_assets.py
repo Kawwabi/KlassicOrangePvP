@@ -157,9 +157,9 @@ else:
     purge_glob(f"{blocks_dir}/*_terracotta.png")
 
 # =========================================================================
-# ARMOR PRUNING FOR 1.14+ (Targeting specific materials avoids breaking empty slots)
+# ARMOR PRUNING FOR 1.15+ (Targeting specific materials avoids breaking empty slots)
 # =========================================================================
-if fmt >= 4:
+if fmt >= 5:
     purge_glob("textures/models/armor/*.png")
     purge_glob("textures/entity/horse/armor/*.png")
     
