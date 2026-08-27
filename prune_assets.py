@@ -99,7 +99,7 @@ version_windows = {
     f"{items_dir}/phantom_membrane*": (4, None),
     "textures/particle/damage.png": (4, None),
     "textures/particle/heart.png": (4, None),
-    "textures/particle/particles.png": (1, 3), 
+    "textures/particle/particles.png": (1, 4), 
     
     # --- 1.13+ CONTENT ---
     f"{blocks_dir}/stripped_*.png": (4, None),
