@@ -197,11 +197,11 @@ jobs:
             rm -rf build_dir/assets/minecraft/optifine/ctm 2>/dev/null || true
           else
             # For 1.8 to 1.12.2 (Formats 1, 2, 3) specific overrides:
-            # 1. Bone Ends (Added 1.10 / Format 2+)
+            # 1. Bone Blocks CTM (Added 1.10 / Format 2+)
             if [ "${{ matrix.format }}" -ge 2 ]; then
-              if [ -d "modern_override/assets/minecraft/optifine/ctm/default/bone_ends" ]; then
+              if [ -d "modern_override/assets/minecraft/optifine/ctm/default/bone" ]; then
                 mkdir -p build_dir/assets/minecraft/mcpatcher/ctm/default
-                cp -r modern_override/assets/minecraft/optifine/ctm/default/bone_ends build_dir/assets/minecraft/mcpatcher/ctm/default/
+                cp -r modern_override/assets/minecraft/optifine/ctm/default/bone build_dir/assets/minecraft/mcpatcher/ctm/default/
               fi
             fi
           fi
