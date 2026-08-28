@@ -306,6 +306,12 @@ jobs:
               mv -f build_dir/assets/minecraft/lang/pt_BR.json build_dir/assets/minecraft/lang/pt_br.json
             fi
             rm -f build_dir/assets/minecraft/lang/*.lang 2>/dev/null || true
+            
+            # --- OVERRIDE FOR 1.16+ LANG FILE ---
+            # Format 5 covers 1.15-1.16.1. We apply this to format 5 and above.
+            if [ "${{ matrix.format }}" -ge 5 ]; then
+              cp -f "modern_override/assets/minecraft/lang/pt_br1.16.json" build_dir/assets/minecraft/lang/pt_br.json
+            fi
           fi
 
           # Clean up slab and pressure plate files for versions 1.13 and above (Format 4+)

@@ -215,9 +215,8 @@ if fmt >= 4:
         "mutton_cooked.png", "rabbit_raw.png", "rabbit_cooked.png", "fish_cod_raw.png", "fish_cod_cooked.png", "fish_salmon_raw.png", 
         "fish_salmon_cooked.png", "fish_pufferfish_raw.png", "fish_clownfish_raw.png", "melon.png", "melon_speckled.png", "apple_golden.png", 
         "carrot_golden.png", "minecart_normal.png", "door_*.png", "dye_powder_*.png", "record_*.png", "seeds_*.png", "potion_bottle_*.png", 
-        "redstone_dust.png", "reeds.png", "slimeball.png", "netherbrick.png", "sign.png", "bucket_empty.png", 
-        "bucket_water.png", "bucket_lava.png", "bucket_milk.png", "book_normal.png", "book_enchanted.png", "book_writable.png", "book_written.png", 
-        "map_empty.png", "map_filled.png", "totem.png"
+        "redstone_dust.png", "reeds.png", "slimeball.png", "netherbrick.png", "sign.png", "bucket_empty.png", "bucket_water.png", "bucket_lava.png",
+        "bucket_milk.png", "book_normal.png", "book_enchanted.png", "book_writable.png", "book_written.png", "map_empty.png", "map_filled.png", "totem.png"
     ]
     for li in legacy_items:
         purge_glob(f"{items_dir}/{li}")
@@ -239,14 +238,13 @@ else:
         "*_terracotta.png", "dark_prismarine.png", "prismarine.png", "oak_leaves.png", "spruce_leaves.png", "birch_leaves.png", "jungle_leaves.png", 
         "acacia_leaves.png", "dark_oak_leaves.png", "slime_block.png", "redstone_lamp.png", "piston_top.png", "anvil.png", "anvil_top.png", 
         "chipped_anvil_top.png", "damaged_anvil_top.png", "anvil_top_damaged.png", "cobweb.png", "wheat_stage[0-7].png", "smooth_stone_slab_*.png", 
-        "stone_bricks.png", "mossy_stone_bricks.png", "cracked_stone_bricks.png", "chiseled_stone_bricks.png", "mossy_cobblestone.png", "*_sapling.png", 
-        "redstone_torch.png", "andesite.png", "diorite.png", "granite.png", "polished_andesite.png", "polished_diorite.png", "polished_granite.png", 
-        "oak_log*.png", "spruce_log*.png", "birch_log*.png", "jungle_log*.png", "acacia_log*.png", "dark_oak_log*.png", "*_planks.png", "tall_grass*.png", 
-        "large_fern_*.png", "lilac_*.png", "peony_*.png", "rose_bush_*.png", "sunflower_*.png", "tripwire.png", "tripwire_hook.png", "dead_bush.png", 
-        "oak_trapdoor.png", "torch.png", "itemframe_background.png", "sugar_cane.png", "wet_sponge.png", "end_portal_frame_*.png", 
-        "dropper_front.png", "dispenser_front.png", "note_block.png", "packed_ice.png", "nether_quartz_ore.png",
-        "quartz_pillar_side.png", "quartz_pillar.png", "quartz_pillar_top.png", "cocoa_stage0.png", "cocoa_stage1.png", "cocoa_stage2.png", 
-        "fire_0.png", "fire_1.png"
+        "smooth_stone.png", "stone_bricks.png", "mossy_stone_bricks.png", "cracked_stone_bricks.png", "chiseled_stone_bricks.png", "mossy_cobblestone.png",
+        "*_sapling.png", "redstone_torch.png", "andesite.png", "diorite.png", "granite.png", "polished_andesite.png", "polished_diorite.png",
+        "polished_granite.png", "oak_log*.png", "spruce_log*.png", "birch_log*.png", "jungle_log*.png", "acacia_log*.png", "dark_oak_log*.png", "*_planks.png",
+        "tall_grass*.png", "large_fern_*.png", "lilac_*.png", "peony_*.png", "rose_bush_*.png", "sunflower_*.png", "tripwire.png", "tripwire_hook.png", 
+        "dead_bush.png", "oak_trapdoor.png", "torch.png", "itemframe_background.png", "sugar_cane.png", "wet_sponge.png", "end_portal_frame_*.png",
+        "dropper_front.png", "dispenser_front.png", "note_block.png", "packed_ice.png", "nether_quartz_ore.png", "quartz_pillar_side.png",
+        "quartz_pillar.png", "quartz_pillar_top.png", "cocoa_stage0.png", "cocoa_stage1.png", "cocoa_stage2.png", "fire_0.png", "fire_1.png"
     ]
     for mb in modern_blocks:
         purge_glob(f"{blocks_dir}/{mb}")
@@ -514,6 +512,15 @@ if fmt >= 3:
     purge_glob(f"{blocks_dir}/vine*.png")
     purge_glob(f"{blocks_dir}/tall_grass*.png")
     purge_glob(f"{blocks_dir}/tallgrass.png")
+
+# =========================================================================
+# LANG FILE PRUNING
+# 1.12- uses .lang, 1.13+ uses .json
+# =========================================================================
+if fmt <= 3:
+    purge_glob("lang/*.json")
+else:
+    purge_glob("lang/*.lang")
 
 if fmt < 3:
     for color in bed_colors:
