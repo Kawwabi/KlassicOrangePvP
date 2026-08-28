@@ -1,7 +1,7 @@
 {
   "variants": {
     "axis=x": { "model": "block/bone_block_x" },
-    "axis=y": { "model": "block/bone_block" },
+    "axis=y": { "model": "block/bone_block_y" },
     "axis=z": { "model": "block/bone_block_z" }
   }
 }
