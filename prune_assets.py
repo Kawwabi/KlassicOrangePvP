@@ -505,6 +505,9 @@ if fmt >= 5:
     for c in crop_types:
         purge_glob(f"{blocks_dir}/{c}_stage*.png")
 
+# GUI background panorama prunning (Above 1.12 / Format 4+)
+if fmt >= 4:
+    purge_glob("textures/gui/title/background")
 
 # Melons, Vines, and Tall Grass: Pruned above 1.10 (fmt >= 3)
 if fmt >= 3:
@@ -513,10 +516,7 @@ if fmt >= 3:
     purge_glob(f"{blocks_dir}/tall_grass*.png")
     purge_glob(f"{blocks_dir}/tallgrass.png")
 
-# =========================================================================
 # LANG FILE PRUNING
-# 1.12- uses .lang, 1.13+ uses .json
-# =========================================================================
 if fmt <= 3:
     purge_glob("lang/*.json")
 else:
