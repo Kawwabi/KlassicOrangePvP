@@ -35,11 +35,16 @@ on:
         default: false
         type: boolean
       v_1_15:
-        description: '1.15-1.16.1'
+        description: '1.15-1.15.2'
         required: false
         default: false
         type: boolean
-      v_1_16:
+      v_1_16_1:
+        description: '1.16-1.16.1'
+        required: false
+        default: false
+        type: boolean
+      v_1_16_2:
         description: '1.16.2-1.16.5'
         required: false
         default: false
@@ -106,8 +111,9 @@ jobs:
             {"key": "v_1_9", "filename": "1.9-1.10.2", "mc_ver": "1.9", "format": 2},
             {"key": "v_1_11", "filename": "1.11-1.12.2", "mc_ver": "1.11", "format": 3},
             {"key": "v_1_13", "filename": "1.13-1.14.4", "mc_ver": "1.13", "format": 4},
-            {"key": "v_1_15", "filename": "1.15-1.16.1", "mc_ver": "1.15", "format": 5},
-            {"key": "v_1_16", "filename": "1.16.2-1.16.5", "mc_ver": "1.16.2", "format": 6},
+            {"key": "v_1_15", "filename": "1.15-1.15.2", "mc_ver": "1.15", "format": 5},
+            {"key": "v_1_16_1", "filename": "1.16-1.16.1", "mc_ver": "1.16.1", "format": 5},
+            {"key": "v_1_16_2", "filename": "1.16.2-1.16.5", "mc_ver": "1.16.2", "format": 6},
             {"key": "v_1_17", "filename": "1.17-1.17.1", "mc_ver": "1.17", "format": 7},
             {"key": "v_1_18", "filename": "1.18-1.18.2", "mc_ver": "1.18", "format": 8},
             {"key": "v_1_19", "filename": "1.19-1.19.2", "mc_ver": "1.19", "format": 9},
@@ -213,6 +219,12 @@ jobs:
               # Using -rf to purposefully overwrite legacy files with modern ones
               cp -rf modern_override/* build_dir/ 2>/dev/null || true
             fi
+          fi
+
+          # --- BONE BLOCK RENDER BUG FIX (1.13 - 1.15.2) ---
+          # Deletes the custom blockstate file so vanilla takes over the rotation logic explicitly for the broken versions, leaving it intact for 1.16+
+          if [ "${{ matrix.mc_ver }}" = "1.13" ] || [ "${{ matrix.mc_ver }}" = "1.15" ]; then
+            rm -f build_dir/assets/minecraft/blockstates/bone_block.json 2>/dev/null || true
           fi
 
           # GUI Container Overrides for 1.9+ (Formats 2+)
