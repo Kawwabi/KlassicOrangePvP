@@ -195,6 +195,31 @@ jobs:
 
           # --- 1. SELECTIVE OVERRIDES & CONVERSION CLEANUP ---
 
+          # Preserve base Smooth Stone CTM up to 1.12.2 (Formats 1, 2, and 3)
+          if [ "${{ matrix.format }}" -lt 4 ]; then
+            # Revert any smooth stone CTM back to base src/ assets
+            for ctm_dir in "assets/minecraft/mcpatcher/ctm" "assets/minecraft/optifine/ctm"; do
+              if [ -d "src/$ctm_dir" ]; then
+                find "src/$ctm_dir" -type f \( -name "*stone_slab*" -o -name "*smooth_stone*" -o -name "*stone*" \) | while read -r file; do
+                  target="build_dir/${file#src/}"
+                  mkdir -p "$(dirname "$target")"
+                  cp -f "$file" "$target"
+                done
+              fi
+            done
+
+            # Restore base smooth stone block/item textures if converted incorrectly
+            for tex_dir in "assets/minecraft/textures/blocks" "assets/minecraft/textures/items"; do
+              if [ -d "src/$tex_dir" ]; then
+                find "src/$tex_dir" -type f \( -name "*stone_slab*" -o -name "*stone*" \) | while read -r file; do
+                  target="build_dir/${file#src/}"
+                  mkdir -p "$(dirname "$target")"
+                  cp -f "$file" "$target"
+                done
+              fi
+            done
+          fi
+
           # CTM Cleanup and Injection
           if [ "${{ matrix.format }}" -ge 4 ]; then
             # The Flattening (1.13+) changed block IDs and structures.
