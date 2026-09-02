@@ -505,6 +505,22 @@ if fmt >= 5:
     for c in crop_types:
         purge_glob(f"{blocks_dir}/{c}_stage*.png")
 
+# SMOOTH STONE SLAB CTM VERSION SWAP (Format 4 = 1.13-1.14, Format 5+ = 1.15+)
+
+ctm_files = glob.glob(os.path.join(base_dir, "**/smooth_stone_slab_side_1.14.properties"), recursive=True)
+
+for path in ctm_files:
+    folder = os.path.dirname(path)
+    target_properties = os.path.join(folder, "smooth_stone_slab_side.properties")
+    
+    if fmt == 4:
+        # On 1.13 - 1.14.4: replace smooth_stone_slab_side.properties with the 1.14 version
+        shutil.move(path, target_properties)
+    else:
+        # On 1.12- and 1.15+: delete the 1.14-specific file
+        if os.path.exists(path):
+            os.remove(path)
+
 # GUI background panorama prunning (Above 1.12 / Format 4+)
 if fmt >= 4:
     purge_glob("textures/gui/title/background")
