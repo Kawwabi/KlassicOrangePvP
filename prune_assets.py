@@ -243,8 +243,8 @@ else:
         "polished_granite.png", "oak_log*.png", "spruce_log*.png", "birch_log*.png", "jungle_log*.png", "acacia_log*.png", "dark_oak_log*.png", "*_planks.png",
         "tall_grass*.png", "large_fern_*.png", "lilac_*.png", "peony_*.png", "rose_bush_*.png", "sunflower_*.png", "tripwire.png", "tripwire_hook.png", 
         "dead_bush.png", "oak_trapdoor.png", "torch.png", "itemframe_background.png", "sugar_cane.png", "wet_sponge.png", "end_portal_frame_*.png",
-        "dropper_front.png", "dispenser_front.png", "note_block.png", "packed_ice.png", "nether_quartz_ore.png", "quartz_pillar_side.png",
-        "quartz_pillar.png", "quartz_pillar_top.png", "cocoa_stage0.png", "cocoa_stage1.png", "cocoa_stage2.png", "fire_0.png", "fire_1.png"
+        "dropper_front.png", "dispenser_front.png", "note_block.png", "packed_ice.png", "nether_quartz_ore.png", "quartz_pillar.png",
+        "quartz_pillar_top.png", "cocoa_stage0.png", "cocoa_stage1.png", "cocoa_stage2.png", "fire_0.png", "fire_1.png"
     ]
     for mb in modern_blocks:
         purge_glob(f"{blocks_dir}/{mb}")
