@@ -1,13 +1,34 @@
-# Klassic Orange PvP
+<div align="center">
 
-**A vibrant PvP texture pack for multiple Minecraft versions (highly recommended for 1.8.9!).**
+  <img src="pack.gif" alt="Klassic Orange PvP Logo" width="256">
 
-This texture pack was designed to recreate the feeling Minecraft gave me as a child. Back then, everything seemed more vibrant, more interesting, and completely new. I wanted to bring that magic back.
+  # ⎯ Klassic Orange PvP ⎯
 
-I started with a fun biological concept: when we are young, the receptors in our eyes are fresh, allowing us to process a wider visual range. This naturally gives children the feeling of seeing the world with "extra saturation" and richer colors. I used that idea as the core inspiration here, tweaking the colors and contrasts to replicate that exact feeling of childhood wonder.
+  **A vibrant PvP texture pack for multiple Minecraft versions (highly recommended for 1.8.9!).**
+
+  <p>
+    <a href="https://modrinth.com/resourcepack/klassic-orange-pvp">
+      <img src="https://img.shields.io/modrinth/dt/klassic-orange-pvp?style=for-the-badge&logo=modrinth&logoColor=white&color=00AF5C" alt="Modrinth Downloads">
+    </a>
+    <a href="https://modrinth.com/resourcepack/klassic-orange-pvp">
+      <img src="https://img.shields.io/modrinth/game-versions/klassic-orange-pvp?style=for-the-badge&logo=minecraft&logoColor=white&color=3C8527" alt="Minecraft Versions">
+    </a>
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">
+      <img src="https://img.shields.io/badge/License-CC_BY--SA_4.0-blue.svg?style=for-the-badge" alt="CC BY-SA 4.0 License">
+    </a>
+  </p>
+
+</div>
+
+---
+
+This texture pack was designed to recreate the feeling Minecraft gave me as a child. Back then, everything seemed more vibrant and interesting. I wanted to bring that magic back, so here's my pack!
+
+I started with a biological concept in mind: The color receptors in children's eyes are fresh, allowing them to process a wider visual range, which gives them the feeling of seeing the world with more color (aka, more saturation, since there's a wider color range). I used that idea as the core inspiration here, tweaking the colors and contrasts to replicate that feeling for me, I hope it also suits you, too.
 
 ## About the Assets
-To make this vision a reality, this pack combines my own custom textures, slightly edited vanilla Minecraft assets and some open-source community contributions, including adapted backported textures and a custom cubemap.
+
+To make this vision a reality, this pack combines my own custom textures, Minecraft's newer version's textures, edited vanilla Minecraft assets, and some open-source community contributions, including adapted backported textures and a custom cubemap to get a cool sunset.
 
 ---
 
