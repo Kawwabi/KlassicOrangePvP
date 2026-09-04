@@ -202,7 +202,8 @@ if fmt >= 4:
         "stone_andesite*.png", "stone_diorite*.png", "stone_granite*.png", "log_*.png", "planks_*.png", "tallgrass.png", "double_plant_*.png", 
         "trip_wire.png", "trip_wire_source.png", "deadbush.png", "trapdoor.png", "torch_on.png", "item_frame.png", "reeds.png", "sponge_wet.png",
         "dropper_front_vertical.png", "dropper_front_horizontal.png", "dispenser_front_vertical.png", "dispenser_front_horizontal.png",
-        "noteblock.png", "ice_packed.png", "quartz_ore.png", "quartz_block_lines.png", "quartz_block_lines_top.png", "fire_layer_*.png"
+        "noteblock.png", "ice_packed.png", "quartz_ore.png", "quartz_block_lines.png", "quartz_block_lines_top.png", "fire_layer_*.png",
+        "repeater_off.png", "observer_back_lit.png", "redstone_dust_cross.png", "redstone_dust_line.png", "end_bricks.png"
     ]
     for lb in legacy_blocks:
         purge_glob(f"{blocks_dir}/{lb}")
@@ -244,7 +245,8 @@ else:
         "tall_grass*.png", "large_fern_*.png", "lilac_*.png", "peony_*.png", "rose_bush_*.png", "sunflower_*.png", "tripwire.png", "tripwire_hook.png", 
         "dead_bush.png", "oak_trapdoor.png", "torch.png", "itemframe_background.png", "sugar_cane.png", "wet_sponge.png", "end_portal_frame_*.png",
         "dropper_front.png", "dispenser_front.png", "note_block.png", "packed_ice.png", "nether_quartz_ore.png", "quartz_pillar.png",
-        "quartz_pillar_top.png", "cocoa_stage0.png", "cocoa_stage1.png", "cocoa_stage2.png", "fire_0.png", "fire_1.png"
+        "quartz_pillar_top.png", "cocoa_stage0.png", "cocoa_stage1.png", "cocoa_stage2.png", "fire_0.png", "fire_1.png",
+        "repeater.png", "observer_back_on.png", "redstone_dust_dot.png", "redstone_dust_line0.png", "redstone_dust_line1.png", "end_stone_bricks.png"
     ]
     for mb in modern_blocks:
         purge_glob(f"{blocks_dir}/{mb}")
@@ -290,14 +292,58 @@ if fmt > 9:
 if fmt > 9:
     purge_glob(f"{blocks_dir}/piston*.png")
 
+# =========================================================================
+# THE GIANT ABOVE 1.14 BLOCK (fmt >= 5)
+# =========================================================================
 if fmt >= 5:
     # 1.15+ Bucket Retextures
     purge_glob(f"{items_dir}/*_bucket.png") 
     purge_glob(f"{items_dir}/beetroot_seeds.png")
     purge_glob(f"{items_dir}/seeds_beetroot.png")
 
-# The Giant Above 1.14 Block (fmt >= 5)
-if fmt >= 5:
+    # Jukebox
+    purge_glob(f"{blocks_dir}/jukebox*.png")
+
+    # Soul Sand, Netherrack, TNT
+    purge_glob(f"{blocks_dir}/soul_sand*.png")
+    purge_glob(f"{blocks_dir}/netherrack*.png")
+    purge_glob(f"{blocks_dir}/tnt*.png")
+
+    # All Plants & Saplings
+    purge_glob(f"{blocks_dir}/*sapling*.png")
+    purge_glob(f"{blocks_dir}/fern*.png")
+    purge_glob(f"{blocks_dir}/dead_bush.png")
+    purge_glob(f"{blocks_dir}/deadbush.png")
+    purge_glob(f"{blocks_dir}/bamboo*.png")
+    purge_glob(f"{blocks_dir}/sweet_berry_bush*.png")
+    purge_glob(f"{blocks_dir}/seagrass*.png")
+    purge_glob(f"{blocks_dir}/tall_seagrass*.png")
+    purge_glob(f"{blocks_dir}/sea_pickle*.png")
+    purge_glob(f"{blocks_dir}/kelp*.png")
+    purge_glob(f"{blocks_dir}/double_plant_*.png")
+
+    # Itemframe Background
+    purge_glob(f"{blocks_dir}/itemframe_background.png")
+    purge_glob(f"{blocks_dir}/item_frame.png")
+
+    # All Ice Blocks
+    purge_glob(f"{blocks_dir}/ice*.png")
+    purge_glob(f"{blocks_dir}/packed_ice.png")
+    purge_glob(f"{blocks_dir}/ice_packed.png")
+    purge_glob(f"{blocks_dir}/blue_ice.png")
+    purge_glob(f"{blocks_dir}/frosted_ice*.png")
+
+    # All Furnaces
+    purge_glob(f"{blocks_dir}/*furnace*.png")
+    purge_glob(f"{blocks_dir}/smoker*.png")
+
+    # Enchanting Table
+    purge_glob(f"{blocks_dir}/enchanting_table*.png")
+
+    # Endstone Bricks (Fully prune on 1.15+)
+    purge_glob(f"{blocks_dir}/end_stone_bricks.png")
+    purge_glob(f"{blocks_dir}/end_bricks.png")
+
     # Planks and Logs (apart from spruce planks handled separately)
     wood_types = ["oak", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "crimson", "warped", "bamboo", "bamboo_mosaic"]
     for w in wood_types:
@@ -329,7 +375,7 @@ if fmt >= 5:
     # Polished Stones
     purge_glob(f"{blocks_dir}/polished_*.png")
 
-    # Bricks (apart from nether bricks, which remain via normal logic)
+    # Bricks
     purge_glob(f"{blocks_dir}/bricks.png")
     purge_glob(f"{blocks_dir}/brick.png")
 
@@ -355,7 +401,7 @@ if fmt >= 5:
         if w != "spruce":
             purge_glob(f"{blocks_dir}/stripped_{w}_log_top.png")
             purge_glob(f"{blocks_dir}/stripped_{w}_stem_top.png")
-    purge_glob(f"{blocks_dir}/stripped_dark_oak_log_top.png") # Ensure dark oak top is pruned
+    purge_glob(f"{blocks_dir}/stripped_dark_oak_log_top.png")
 
     # Waterlily
     purge_glob(f"{blocks_dir}/lily_pad.png")
@@ -370,11 +416,9 @@ if fmt >= 5:
     purge_glob(f"{blocks_dir}/bed_*.png")
 
     # Flowers (apart from dandelion)
-    # Target exact names to prevent mistakenly clipping dandelion.png
     flower_patterns = ["poppy", "blue_orchid", "allium", "azure_bluet", "oxeye_daisy", "cornflower", "lily_of_the_valley", "wither_rose", "sunflower", "lilac", "peony", "rose_bush", "tulip", "flower_"]
     for fp in flower_patterns:
         if fp == "flower_":
-            # Prune flower_*.png except flower_dandelion.png and flower_pot.png (it's not a flower)
             for f_file in glob.glob(os.path.join(base_dir, blocks_dir, "flower_*.png")):
                 if "dandelion" not in f_file and "pot" not in f_file:
                     purge_glob(f"{blocks_dir}/{os.path.basename(f_file)}")
@@ -448,7 +492,7 @@ if fmt >= 5:
     # Daylight Detectors
     purge_glob(f"{blocks_dir}/daylight_detector*.png")
 
-    # Dirt and Grass Types like Podzol and Mycelium
+    # Dirt and Grass Types
     dirt_basenames = [
         "dirt.png", "coarse_dirt.png", "rooted_dirt.png", 
         "dirt_path_side.png", "dirt_path_top.png", 
@@ -459,8 +503,6 @@ if fmt >= 5:
     ]
     for db in dirt_basenames:
         purge_glob(f"{blocks_dir}/{db}")
-        
-    # Exceptions for Snowy Grass and Mycelium Side
     if fmt < 8: # Keep snowy grass above 1.17 (prune under 1.18)
         purge_glob(f"{blocks_dir}/grass_block_snow.png")
         purge_glob(f"{blocks_dir}/grass_side_snowed.png")
@@ -491,7 +533,7 @@ if fmt >= 5:
     purge_glob(f"{blocks_dir}/cobblestone*.png")
     purge_glob(f"{blocks_dir}/mossy_cobblestone.png")
 
-    # Observer (apart from its back texture)
+    # Observer (apart from back)
     purge_glob(f"{blocks_dir}/observer_top.png")
     purge_glob(f"{blocks_dir}/observer_side.png")
     purge_glob(f"{blocks_dir}/observer_front.png")
@@ -505,8 +547,27 @@ if fmt >= 5:
     for c in crop_types:
         purge_glob(f"{blocks_dir}/{c}_stage*.png")
 
-# SMOOTH STONE SLAB CTM VERSION SWAP (Format 4 = 1.13-1.14, Format 5+ = 1.15+)
+# ORES & PUMPKINS: PRUNED ABOVE 1.17 (fmt >= 8)
+if fmt >= 8:
+    # All Ores (Classic, Deepslate, Nether)
+    ore_types = ["coal", "iron", "gold", "diamond", "emerald", "lapis", "redstone", "copper", "nether_quartz", "quartz", "nether_gold"]
+    for ore in ore_types:
+        purge_glob(f"{blocks_dir}/*{ore}_ore*.png")
+        purge_glob(f"{blocks_dir}/ore_{ore}*.png")
+    
+    # All Pumpkin Textures
+    purge_glob(f"{blocks_dir}/*pumpkin*.png")
 
+# DOORS & DARK OAK: PRUNED ABOVE 1.18 (fmt >= 9)
+if fmt >= 9:
+    # Remove all doors
+    purge_glob(f"{blocks_dir}/*door*.png")
+
+    # Remove all dark oak block textures
+    purge_glob(f"{blocks_dir}/*dark_oak*.png")
+    purge_glob(f"{blocks_dir}/leaves_big_oak*.png")
+
+# SMOOTH STONE SLAB CTM VERSION SWAP
 ctm_files = glob.glob(os.path.join(base_dir, "**/smooth_stone_slab_side_1.14.properties"), recursive=True)
 
 for path in ctm_files:
@@ -517,20 +578,23 @@ for path in ctm_files:
         # On 1.13 - 1.14.4: replace smooth_stone_slab_side.properties with the 1.14 version
         shutil.move(path, target_properties)
     else:
-        # On 1.12- and 1.15+: delete the 1.14-specific file
         if os.path.exists(path):
             os.remove(path)
 
-# GUI background panorama prunning (Above 1.12 / Format 4+)
+# GUI background panorama pruning (Above 1.12 / Format 4+)
 if fmt >= 4:
     purge_glob("textures/gui/title/background")
 
-# Melons, Vines, and Tall Grass: Pruned above 1.10 (fmt >= 3)
+# VERSION SPECIFIC CHECKS (ABOVE 1.10)
 if fmt >= 3:
     purge_glob(f"{blocks_dir}/melon*.png")
     purge_glob(f"{blocks_dir}/vine*.png")
     purge_glob(f"{blocks_dir}/tall_grass*.png")
     purge_glob(f"{blocks_dir}/tallgrass.png")
+    purge_glob(f"{blocks_dir}/hay_block_top.png")
+    purge_glob(f"{blocks_dir}/podzol*.png")
+    purge_glob(f"{blocks_dir}/end_stone.png")
+    purge_glob(f"{blocks_dir}/endstone.png")
 
 # LANG FILE PRUNING
 if fmt <= 3:
