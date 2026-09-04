@@ -26,6 +26,51 @@ This texture pack was designed to recreate the feeling Minecraft gave me as a ch
 
 I started with a biological concept in mind: The color receptors in children's eyes are fresh, allowing them to process a wider visual range, which gives them the feeling of seeing the world with more color (aka, more saturation, since there's a wider color range). I used that idea as the core inspiration here, tweaking the colors and contrasts to replicate that feeling for me, I hope it also suits you, too.
 
+## Preview
+
+<div align="center">
+  <img src="island.png" alt="Island Preview" width="100%">
+  <br><br>
+  <img src="blocks.png" alt="Blocks Showcase" width="49%">
+  <img src="hud.png" alt="HUD Preview" width="49%">
+  <br><br>
+  <img src="items.gif" alt="Animated Items Showcase" width="100%">
+</div>
+
+---
+
+## Recommended Settings
+
+For all visual features, custom skies, and connected textures to display properly, please use at least **OptiFine HD M6_pre2 Ultra** on **Minecraft 1.8.9**.
+
+### Video Settings
+| Setting | Recommended Value |
+| :--- | :--- |
+| **Graphics** | Fancy |
+| **Render Distance** | 16 Chunks |
+
+### Quality Settings
+| Setting | Recommended Value |
+| :--- | :--- |
+| **Mipmap Levels** | Maximum |
+| **Mipmap Type** | Nearest |
+| **Connected Textures** | Fancy |
+| **Custom Sky** | ON |
+| **Custom Items** | ON |
+| **Custom GUIs** | ON |
+| **Custom Colors** | ON |
+
+### Details Settings
+| Setting | Recommended Value |
+| :--- | :--- |
+| **Sky** | OFF |
+| **Sun & Moon** | ON |
+| **Stars** | OFF |
+| **Fog** | OFF |
+| **Vignette** | Fast |
+
+---
+
 ## About the Assets
 
 To make this vision a reality, this pack combines my own custom textures, Minecraft's newer version's textures, edited vanilla Minecraft assets, and some open-source community contributions, including adapted backported textures and a custom cubemap to get a cool sunset.
