@@ -77,6 +77,10 @@ To make this vision a reality, this pack combines my own custom textures, Minecr
 
 ---
 
+## AI Usage disclaimer
+
+I will not lie and say this texturepack was made completely without AI, BUT, before you go away! Please note that the only AI usage on this texture was specifically for making the code for packing the texture with the most optimization possible, the code was fully reviewed by me by hand, I did more than 250 attempts at getting it to work before I did release an full version and absolutely NO textures were made by AI, they were either made by Mojang, me using Krita, or one of the other creators on the License and Credits part. I fully understand that my inability to code well enough to do it completely by hand is a big flaw of mine and I do want to be transparent about it.
+
 ### License & Credits
 
 <sub>This work is a derivative of <a href="https://github.com/backporteverything/Backport-Everything">Backport Everything</a> by samfortyseven, used under CC BY-SA 4.0. This modified version is licensed under CC BY-SA 4.0 by Kawwabi. To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/4.0/</sub>
