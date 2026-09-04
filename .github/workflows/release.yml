@@ -425,7 +425,7 @@ jobs:
             never_store_squash_times = true
             spooling_buffers_size = 512
             zip_compression_iterations = 255
-            zip_spec_conformance_level = 'pedantic'
+            zip_spec_conformance_level = 'disregard'
             recompress_compressed_files = true
 
             ['**/*.png']
