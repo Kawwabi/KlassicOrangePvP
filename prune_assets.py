@@ -578,6 +578,7 @@ for path in ctm_files:
         # On 1.13 - 1.14.4: replace smooth_stone_slab_side.properties with the 1.14 version
         shutil.move(path, target_properties)
     else:
+        # On 1.12- and 1.15+: delete the 1.14-specific file
         if os.path.exists(path):
             os.remove(path)
 
