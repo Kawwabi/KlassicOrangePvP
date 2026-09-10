@@ -107,20 +107,20 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
         run: |
           ALL_VERSIONS='[
-            {"key": "v_1_8", "filename": "1.6.1-1.8.9", "mc_ver": "1.8", "format": 1, "is_base": true},
-            {"key": "v_1_9", "filename": "1.9-1.10.2", "mc_ver": "1.9", "format": 2},
-            {"key": "v_1_11", "filename": "1.11-1.12.2", "mc_ver": "1.11", "format": 3},
-            {"key": "v_1_13", "filename": "1.13-1.14.4", "mc_ver": "1.13", "format": 4},
-            {"key": "v_1_15", "filename": "1.15-1.15.2", "mc_ver": "1.15", "format": 5},
-            {"key": "v_1_16_1", "filename": "1.16-1.16.1", "mc_ver": "1.16.1", "format": 5},
-            {"key": "v_1_16_2", "filename": "1.16.2-1.16.5", "mc_ver": "1.16.2", "format": 6},
-            {"key": "v_1_17", "filename": "1.17-1.17.1", "mc_ver": "1.17", "format": 7},
-            {"key": "v_1_18", "filename": "1.18-1.18.2", "mc_ver": "1.18", "format": 8},
-            {"key": "v_1_19", "filename": "1.19-1.19.2", "mc_ver": "1.19", "format": 9},
-            {"key": "v_1_19_3", "filename": "1.19.3", "mc_ver": "1.19.3", "format": 12},
-            {"key": "v_1_19_4", "filename": "1.19.4", "mc_ver": "1.19.4", "format": 13},
-            {"key": "v_1_20", "filename": "1.20-1.20.1", "mc_ver": "1.20", "format": 15},
-            {"key": "v_1_20_2", "filename": "1.20.2-26.x", "mc_ver": "1.21.4", "format": 88, "is_modern": true}
+            {"key": "v_1_8", "filename": "1.6.1-1.8.9", "mc_ver": "1.8", "format": 1, "is_base": true, "mr_versions": "1.6.1\n1.6.2\n1.6.4\n1.7.2\n1.7.4\n1.7.5\n1.7.6\n1.7.7\n1.7.8\n1.7.9\n1.7.10\n1.8\n1.8.1\n1.8.2\n1.8.3\n1.8.4\n1.8.5\n1.8.6\n1.8.7\n1.8.8\n1.8.9"},
+            {"key": "v_1_9", "filename": "1.9-1.10.2", "mc_ver": "1.9", "format": 2, "mr_versions": "1.9\n1.9.1\n1.9.2\n1.9.3\n1.9.4\n1.10\n1.10.1\n1.10.2"},
+            {"key": "v_1_11", "filename": "1.11-1.12.2", "mc_ver": "1.11", "format": 3, "mr_versions": "1.11\n1.11.1\n1.11.2\n1.12\n1.12.1\n1.12.2"},
+            {"key": "v_1_13", "filename": "1.13-1.14.4", "mc_ver": "1.13", "format": 4, "mr_versions": "1.13\n1.13.1\n1.13.2\n1.14\n1.14.1\n1.14.2\n1.14.3\n1.14.4"},
+            {"key": "v_1_15", "filename": "1.15-1.15.2", "mc_ver": "1.15", "format": 5, "mr_versions": "1.15\n1.15.1\n1.15.2"},
+            {"key": "v_1_16_1", "filename": "1.16-1.16.1", "mc_ver": "1.16.1", "format": 5, "mr_versions": "1.16\n1.16.1"},
+            {"key": "v_1_16_2", "filename": "1.16.2-1.16.5", "mc_ver": "1.16.2", "format": 6, "mr_versions": "1.16.2\n1.16.3\n1.16.4\n1.16.5"},
+            {"key": "v_1_17", "filename": "1.17-1.17.1", "mc_ver": "1.17", "format": 7, "mr_versions": "1.17\n1.17.1"},
+            {"key": "v_1_18", "filename": "1.18-1.18.2", "mc_ver": "1.18", "format": 8, "mr_versions": "1.18\n1.18.1\n1.18.2"},
+            {"key": "v_1_19", "filename": "1.19-1.19.2", "mc_ver": "1.19", "format": 9, "mr_versions": "1.19\n1.19.1\n1.19.2"},
+            {"key": "v_1_19_3", "filename": "1.19.3", "mc_ver": "1.19.3", "format": 12, "mr_versions": "1.19.3"},
+            {"key": "v_1_19_4", "filename": "1.19.4", "mc_ver": "1.19.4", "format": 13, "mr_versions": "1.19.4"},
+            {"key": "v_1_20", "filename": "1.20-1.20.1", "mc_ver": "1.20", "format": 15, "mr_versions": "1.20\n1.20.1"},
+            {"key": "v_1_20_2", "filename": "1.20.2-26.x", "mc_ver": "1.21.4", "format": 88, "is_modern": true, "mr_versions": "1.20.2\n1.20.3\n1.20.4\n1.20.5\n1.20.6\n1.21\n1.21.1\n1.21.2\n1.21.3\n1.21.4"}
           ]'
 
           MODE=$(echo "$INPUTS_JSON" | jq -r '.mode // "only"')
@@ -425,7 +425,7 @@ jobs:
             never_store_squash_times = true
             spooling_buffers_size = 512
             zip_compression_iterations = 255
-            zip_spec_conformance_level = 'pedantic'
+            zip_spec_conformance_level = 'disregard'
             recompress_compressed_files = true
 
             ['**/*.png']
@@ -437,6 +437,22 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: "Klassic Orange PvP-${{ matrix.filename }}.zip"
+
+      - name: Publish to Modrinth
+        uses: Kir-Antipov/mc-publish@v3.3
+        if: github.event_name == 'release'
+        with:
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          modrinth-id: ${{ secrets.MODRINTH_ID }}
+          version: "${{ github.event.release.tag_name }}-${{ matrix.filename }}"
+          name: "${{ github.event.release.name || github.event.release.tag_name }} [${{ matrix.filename }}]"
+          changelog: ${{ github.event.release.body }}
+          version-type: release
+          files: "Klassic Orange PvP-${{ matrix.filename }}.zip"
+          game-versions: ${{ matrix.mr_versions }}
+          loaders: |
+            minecraft
+            optifine
           
       - name: Upload Single Pack Artifact
         uses: actions/upload-artifact@v4
