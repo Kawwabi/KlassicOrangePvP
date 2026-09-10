@@ -444,9 +444,9 @@ jobs:
         with:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           modrinth-id: ${{ secrets.MODRINTH_ID }}
-          version: "${{ github.event.release.tag_name }}-${{ matrix.filename }}"
-          name: "${{ github.event.release.name || github.event.release.tag_name }} [${{ matrix.filename }}]"
-          changelog: ${{ github.event.release.body }}
+          version: "${{ github.ref_name }}-${{ matrix.filename }}"
+          name: "Release ${{ github.ref_name }} [${{ matrix.filename }}]"
+          changelog: ${{ github.event.release.body || 'No changelog provided.' }}
           version-type: release
           files: "Klassic Orange PvP-${{ matrix.filename }}.zip"
           game-versions: ${{ matrix.mr_versions }}
