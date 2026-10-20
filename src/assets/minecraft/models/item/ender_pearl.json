@@ -1,0 +1,24 @@
+{
+  "credit": "Made with Blockbench",
+  "textures": {
+    "layer0": "item/ender_pearl"
+  },
+  "elements": [
+    {
+      "comment": "Shifted by 0.5 pixels to fix the odd-grid offset",
+      "from": [ 1.5, 1.5, 8 ],
+      "to": [ 14.5, 14.5, 8 ],
+      "faces": {
+        "north": { "uv": [ 1.5, 1.5, 14.5, 14.5 ], "texture": "#layer0" },
+        "south": { "uv": [ 1.5, 1.5, 14.5, 14.5 ], "texture": "#layer0" }
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 1, 1, 1 ]
+    }
+  }
+}
