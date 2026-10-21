@@ -432,6 +432,10 @@ jobs:
             image_data_compression_iterations = 255
             downsize_if_single_color = true
 
+            [[custom_options]]
+            path = "assets/minecraft/textures/item/nether_star.png"
+            skip_alpha_optimizations = true
+
       - name: Attach Zips to GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
