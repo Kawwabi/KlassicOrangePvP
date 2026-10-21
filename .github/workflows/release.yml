@@ -433,6 +433,7 @@ jobs:
             downsize_if_single_color = true
 
             ['assets/minecraft/textures/items/nether_star.png']
+            color_quantization_target = 'none'
             skip_alpha_optimizations = true
 
       - name: Attach Zips to GitHub Release
