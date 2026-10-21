@@ -428,13 +428,13 @@ jobs:
             zip_spec_conformance_level = 'pedantic'
             recompress_compressed_files = true
 
-            ['**/*.png']
-            image_data_compression_iterations = 255
-            downsize_if_single_color = true
-
             [[custom_options]]
             path = "assets/minecraft/textures/items/nether_star.png"
             skip_alpha_optimizations = true
+
+            ['**/*.png']
+            image_data_compression_iterations = 255
+            downsize_if_single_color = true
 
       - name: Attach Zips to GitHub Release
         uses: softprops/action-gh-release@v2
