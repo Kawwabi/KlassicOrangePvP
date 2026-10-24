@@ -432,36 +432,6 @@ jobs:
             image_data_compression_iterations = 255
             downsize_if_single_color = true
 
-      - name: Restore nether star (surgery test on disregard zip)
-        run: |
-          ZIP="Klassic Orange PvP-${{ matrix.filename }}.zip"
-          ENTRY="assets/minecraft/textures/items/nether_star.png"
-
-          echo "Original size: $(stat -c %s "$ZIP") bytes"
-          echo "Star color type before (2 = RGB, 6 = RGBA):"
-          unzip -p "$ZIP" "$ENTRY" | od -An -tu1 -j25 -N1 || echo "unzip could not read the original"
-
-          cp "$ZIP" work.zip
-          mkdir -p "restore/$(dirname "$ENTRY")"
-          cp fixes/nether_star.png "restore/$ENTRY"
-
-          if (cd restore && zip -X ../work.zip "$ENTRY"); then
-            echo "zip update succeeded"
-            echo "New size: $(stat -c %s work.zip) bytes"
-            zip -T work.zip && echo "zip -T: OK" || echo "zip -T: FAILED"
-            echo "Star color type after:"
-            unzip -p work.zip "$ENTRY" | od -An -tu1 -j25 -N1
-
-            if zip -T work.zip >/dev/null 2>&1; then
-              mv work.zip "$ZIP"
-              echo "Replaced output with patched zip"
-            else
-              echo "::warning::Patched zip failed validation, keeping original PackSquash output"
-            fi
-          else
-            echo "::warning::zip could not update the disregard archive, keeping original PackSquash output"
-          fi
-
       - name: Attach Zips to GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
