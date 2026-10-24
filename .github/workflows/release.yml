@@ -432,6 +432,24 @@ jobs:
             image_data_compression_iterations = 255
             downsize_if_single_color = true
 
+      - name: Restore nether star (bypass PackSquash PNG reduction)
+        if: matrix.format == 1
+        run: |
+          set -euo pipefail
+          ZIP="Klassic Orange PvP-${{ matrix.filename }}.zip"
+          ENTRY="assets/minecraft/textures/items/nether_star.png"
+          SRC="src/$ENTRY"
+
+          # The source star must be RGBA (PNG color type 6), or restoring it is pointless
+          [ "$(od -An -tu1 -j25 -N1 "$SRC" | tr -d ' ')" = "6" ] \
+            || { echo "::error::source nether_star.png is not RGBA"; exit 1; }
+
+          cp "$ZIP" patched.zip
+          python3 tools/patch_zip_entry.py patched.zip "$ENTRY" "$SRC"
+          java tools/CheckZip.java patched.zip "$ENTRY" "$SRC"
+          mv patched.zip "$ZIP"
+          echo "Nether star restored ($(stat -c %s "$ZIP") bytes)"
+
       - name: Attach Zips to GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
