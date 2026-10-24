@@ -428,6 +428,10 @@ jobs:
             zip_spec_conformance_level = 'pedantic'
             recompress_compressed_files = true
 
+            ['assets/minecraft/textures/items/nether_star.png']
+            color_quantization_target = 'eight_bit_depth'
+            color_quantization_dithering_level = 0
+
             ['**/*.png']
             image_data_compression_iterations = 255
             downsize_if_single_color = true
