@@ -14,6 +14,14 @@ on:
           - 'all'
         default: 'only'
         required: true
+      conformance_level:
+        description: 'PackSquash Conformance Level'
+        type: choice
+        options:
+          - 'pedantic'
+          - 'disregard'
+        default: 'disregard'
+        required: true
       v_1_8:
         description: '1.6.1-1.8.9'
         required: false
@@ -99,6 +107,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
       count: ${{ steps.set-matrix.outputs.count }}
+      conformance_level: ${{ steps.set-matrix.outputs.conformance_level }}
     steps:
       - name: Calculate Target Matrix
         id: set-matrix
@@ -124,6 +133,7 @@ jobs:
           ]'
 
           MODE=$(echo "$INPUTS_JSON" | jq -r '.mode // "only"')
+          CONFORMANCE=$(echo "$INPUTS_JSON" | jq -r '.conformance_level // "pedantic"')
 
           if [ "$EVENT_NAME" = "release" ] || [ "$MODE" = "all" ]; then
             COMPACT=$(echo "$ALL_VERSIONS" | jq -c '{include: .}')
@@ -145,6 +155,7 @@ jobs:
 
           echo "matrix=$COMPACT" >> "$GITHUB_OUTPUT"
           echo "count=$SELECTED_COUNT" >> "$GITHUB_OUTPUT"
+          echo "conformance_level=$CONFORMANCE" >> "$GITHUB_OUTPUT"
 
   build_packs:
     name: Build ${{ matrix.filename }}
@@ -425,7 +436,7 @@ jobs:
             never_store_squash_times = true
             spooling_buffers_size = 512
             zip_compression_iterations = 255
-            zip_spec_conformance_level = 'pedantic'
+            zip_spec_conformance_level = '${{ needs.setup.outputs.conformance_level }}'
             recompress_compressed_files = true
 
             ['**/*.png']
