@@ -17,6 +17,10 @@
         "gui": {
             "translation": [ 0.5, 0.5, 0 ]
         },
+        "head": {
+            "rotation": [ 0, 0, 160 ],
+            "translation": [ 10, 3.5, 0 ]
+        },
         "fixed": {
             "translation": [ 0.5, 0.5, 0 ]
         }
